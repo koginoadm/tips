@@ -1,6 +1,7 @@
 
 [パッケージマネージャを利用した Node.js のインストール _ Node.js](https://nodejs.org/ja/download/package-manager/)
 ```
+# Ubuntu 16.04 LTS
 sudo apt-get install -y build-essential
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install -y nodejs
