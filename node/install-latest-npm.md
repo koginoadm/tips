@@ -10,6 +10,7 @@ sudo apt-get install -y nodejs
 
 [Ubuntuに最新のNode.jsを難なくインストールする - Qiita](http://qiita.com/seibe/items/36cef7df85fe2cefa3ea)
 ```
+# Ubuntu 16.04 LTS
 apt-get -y install npm
 npm cache clean
 npm install n -g
