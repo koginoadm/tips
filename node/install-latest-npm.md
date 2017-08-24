@@ -1,4 +1,13 @@
 
+[パッケージマネージャを利用した Node.js のインストール _ Node.js](https://nodejs.org/ja/download/package-manager/)
+```
+sudo apt-get install -y build-essential
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+
+[Ubuntuに最新のNode.jsを難なくインストールする - Qiita](http://qiita.com/seibe/items/36cef7df85fe2cefa3ea)
 ```
 apt-get -y install npm
 npm cache clean
