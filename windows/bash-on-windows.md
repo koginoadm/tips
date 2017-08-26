@@ -1,19 +1,26 @@
 # Windows Subsystem for Linux
 
-## インストール手順
+##### 「ファイル名を指定して実行 ( Windows+R ) 」で、以下実行。
 
-1. <kbd>Windows</kbd>+<kbd>R</kbd> => ```powershell.exe -Command "Start-Process -FilePath powershell.exe -Verb RUNAS"```
-1. 以下一連のコマンドを実行。
 ```PowerShell
+powershell.exe -Command "Start-Process -FilePath powershell.exe -Verb RUNAS"
+```
+
+##### 以下一連のコマンドを実行。
+
+```PowerShell
+# Windows機能の有効化 => Microsoft-Windows-Subsystem-Linux
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
 
+# 開発者モード オン
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
 
-lxrun
-
+# インストール
 lxrun /install /y
 ```
-#### 以上。
+
+##### おわり。
+
 
 #### 日本語表示による文字化け回避
 
