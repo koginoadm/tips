@@ -2,7 +2,7 @@
 
 ## インストール手順
 
-1. <kbd>Windows</kbd>+<kbd>R</kbd> => ```powershell.exe -Command "Start-Process -Verb RUNAS powershell.exe"```
+1. <kbd>Windows</kbd>+<kbd>R</kbd> => ```powershell.exe -Command "Start-Process -FilePath powershell.exe -Verb RUNAS"```
 1. 以下一連のコマンドを実行。
 ```PowerShell
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
