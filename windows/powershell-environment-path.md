@@ -8,4 +8,8 @@
 # 環境変数 PATHEXT に .LNK を追加
 [Environment]::SetEnvironmentVariable("PATHEXT", "$env:PATHEXT;.LNK", [EnvironmentVariableTarget]::User)
 
+# 環境変数 PATH に $env:ProgramFiles\Oracle\VirtualBox を追加
+[Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$env:ProgramFiles\Oracle\VirtualBox", [EnvironmentVariableTarget]::User)
+
+
 ```
