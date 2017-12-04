@@ -4,14 +4,12 @@ cat <<'__COMMENT__'
 
 #### bash ####
 function genpasswd() { echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"; }
+find ./ -type f -exec chmod 644 {} \;
+find ./ -type d -exec chmod 755 {} \;
 
-#### passwd/shadow/group/gshadow ####
+#### POSIX ####
 vipw
-vipw -s
 vigr
-vigr -s
-
-#### sudo ####
 visudo -f /etc/sudoers.d/admin
 
 #### PS1 ####
@@ -37,8 +35,6 @@ alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
 
 #### find ####
-find ./ -type f -exec chmod 644 {} \;
-find ./ -type d -exec chmod 755 {} \;
 
 #### ntpd ####
 ntpdate -v ntp.nict.jp
@@ -46,10 +42,6 @@ ntpdate -v ntp.nict.jp
 #### chrony ####
 chronyc sources
 chronyc makestep
-
-#### ssh-keygen ####
-echo | ssh-keygen -N ""
-echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
 
 #### apache ####
 httpd -h #help
@@ -60,6 +52,11 @@ httpd -S #Show the settings as parsed from the config file.
 httpd -t #Run syntax tests for configuration files only.
 httpd -v #Print the version of httpd.
 httpd -V #Print the version and build parameters of httpd.
+
+#### ssh ####
+echo | ssh-keygen -N ""
+echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
+curl https://koginoadm.github.io/keys >> ~/.ssh/authorized_keys
 
 #### appendix ####
 curl checkip.amazonaws.com
