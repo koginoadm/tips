@@ -61,7 +61,7 @@ httpd -V #Print the version and build parameters of httpd.
 
 #### ssh ####
 echo | ssh-keygen -N ""
-[ -f ~/.ssh/tmp ] || [ -f ~/.ssh/tmp.pub ] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
+[ -f ~/.ssh/tmp -o -f ~/.ssh/tmp.pub ] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
 curl https://koginoadm.github.io/keys -o ~/.ssh/authorized_keys && chmod 600 $_
 
 #### python ####
