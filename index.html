@@ -51,6 +51,16 @@ chronyc makestep
 echo | ssh-keygen -N ""
 echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
 
+#### apache ####
+httpd -h #help
+httpd -l #Output a list of modules compiled into the server.
+httpd -L #Output a list of directives provided by static modules.
+httpd -M #Dump a list of loaded Static and Shared Modules.
+httpd -S #Show the settings as parsed from the config file.
+httpd -t #Run syntax tests for configuration files only.
+httpd -v #Print the version of httpd.
+httpd -V #Print the version and build parameters of httpd.
+
 #### appendix ####
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
