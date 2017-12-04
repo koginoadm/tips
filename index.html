@@ -2,6 +2,15 @@
 #### bash ####
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
+#### passwd/shadow/group/gshadow ####
+vipw
+vipw -s
+vigr
+vigr -s
+
+#### sudo ####
+visudo -f /etc/sudoers.d/admin
+
 #### systemctl ####
 # systemctl list-unit-files
 
