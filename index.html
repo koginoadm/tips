@@ -59,7 +59,7 @@ yum install fuse -y && curl -LR https://github.com/kahing/goofys/releases/downlo
 #### appendix ####
 curl checkip.amazonaws.com
 curl ipinfo.io
-curl -LR https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 > /usr/bin/jq && chmod +x $_
+curl -LR https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o /usr/bin/jq && chmod +x $_
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
 
