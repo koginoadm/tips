@@ -62,6 +62,9 @@ httpd -v #Print the version of httpd.
 httpd -V #Print the version and build parameters of httpd.
 
 #### appendix ####
+curl checkip.amazonaws.com
+curl ipinfo.io
+curl -LR https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 > /usr/bin/jq && chmod +x $_
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
 
