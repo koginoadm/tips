@@ -57,6 +57,9 @@ echo | ssh-keygen -N ""
 [ -f ~/.ssh/tmp ] || [ -f ~/.ssh/tmp.pub ] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
 curl https://koginoadm.github.io/keys -o ~/.ssh/authorized_keys && chmod 600 $_
 
+#### python ####
+curl -LR https://bootstrap.pypa.io/get-pip.py | python
+
 #### aws ####
 yum install fuse -y && curl -LR https://github.com/kahing/goofys/releases/download/v0.0.18/goofys -o /usr/bin/goofys && chmod 755 $_
 
