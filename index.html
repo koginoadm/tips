@@ -1,6 +1,6 @@
 # START ########################################################
 cat <<'__COMMENT__'
-<link rel="stylesheet" href="./css/github-gist.css"><script src="./js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0}.monospaced{font-size:1rem}</style><div><pre><code class="monospaced"># START #
+<link rel="stylesheet" href="./css/github-gist.css"><script src="./js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0}.monospaced{font-size:1rem;font-family:Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># START #
 
 #### bash ####
 function genpasswd() { echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"; }
