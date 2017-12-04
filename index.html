@@ -1,5 +1,6 @@
+# START ########################################################
 #<style>body{font-size:0}.monospaced{color:#444;font-size:1rem;font-family:consolas,"Courier New",Courier,monospace}</style><div><code><pre class="monospaced">
-# START
+cat <<'__COMMENT__'
 
 #### bash ####
 function genpasswd() { echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"; }
@@ -54,4 +55,6 @@ function genpasswd() { echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 1
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
 
-# END</pre></code></div>
+__COMMENT__
+#</pre></code></div>
+# END ##########################################################
