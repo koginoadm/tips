@@ -37,6 +37,11 @@ grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforc
 apt update
 yum makecache fast
 
+#### tools ####
+apt -y install zip unzip
+yum -y install zip unzip 
+pip install speedtest-cli
+
 #### ntp ####
 ntpdate -v ntp.nict.jp
 chronyc sources
@@ -61,7 +66,9 @@ curl https://koginoadm.github.io/keys -o ~/.ssh/authorized_keys && chmod 600 $_
 curl -LR https://bootstrap.pypa.io/get-pip.py | python
 
 #### aws ####
-yum install fuse -y && curl -LR https://github.com/kahing/goofys/releases/download/v0.0.18/goofys -o /usr/bin/goofys && chmod 755 $_
+pip install awscli
+apt -y install fuse && curl -LR https://github.com/kahing/goofys/releases/download/v0.0.18/goofys -o /usr/bin/goofys && chmod 755 $_
+yum -y install fuse && curl -LR https://github.com/kahing/goofys/releases/download/v0.0.18/goofys -o /usr/bin/goofys && chmod 755 $_
 
 #### appendix ####
 curl checkip.amazonaws.com
