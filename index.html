@@ -3,6 +3,7 @@ cat <<'__COMMENT__'
 <link rel="stylesheet" href="./css/github-gist.css"><script src="./js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/
 
 #### bash ####
+[ "$(id -u)" -eq 0 ] && export PS1='\[\033[31m\]\u@\h\[\033[00m\]:\[\033[34m\]\w\[\033[00m\]\$ ' || export PS1='\[\033[32m\]\u@\h\[\033[00m\]:\[\033[34m\]\w\[\033[00m\]\$ '
 function genpasswd() { echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"; }
 find ./ -type f -exec chmod 644 {} \;
 find ./ -type d -exec chmod 755 {} \;
@@ -11,15 +12,6 @@ find ./ -type d -exec chmod 755 {} \;
 vipw
 vigr
 visudo -f /etc/sudoers.d/admin
-
-#### PS1 ####
-[ "$(id -u)" -eq 0 ] && export PS1='\[\033[31m\]\u@\h\[\033[00m\]:\[\033[34m\]\w\[\033[00m\]\$ ' || export PS1='\[\033[32m\]\u@\h\[\033[00m\]:\[\033[34m\]\w\[\033[00m\]\$ '
-
-#### systemctl ####
-systemctl list-unit-files
-
-#### SELinux ####
-grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup
 
 #### alias ####
 alias rm='rm -i'
@@ -34,12 +26,14 @@ alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
 
-#### find ####
+#### systemctl ####
+systemctl list-unit-files
 
-#### ntpd ####
+#### SELinux ####
+grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup
+
+#### ntp ####
 ntpdate -v ntp.nict.jp
-
-#### chrony ####
 chronyc sources
 chronyc makestep
 
