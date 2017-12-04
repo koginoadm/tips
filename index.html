@@ -1,6 +1,6 @@
 # START ########################################################
 cat <<'__COMMENT__'
-<style>body{font-size:0}.monospaced{color:#444;font-size:1rem;font-family:consolas,"Courier New",Courier,monospace}</style><div><code><pre class="monospaced">
+<style>body{font-size:0}.monospaced{color:#444;font-size:1rem;font-family:consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced">
 
 #### bash ####
 function genpasswd() { echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"; }
@@ -65,6 +65,6 @@ curl -LR https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 > /u
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
 
-</pre></code></div>
+</code></pre></div>
 __COMMENT__
 # END ##########################################################
