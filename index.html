@@ -1,2 +1,7 @@
+systemctl list-unit-files
+
 find ./ -type f -exec chmod 644 {} \;
 find ./ -type d -exec chmod 755 {} \;
+
+chronyc sources
+chronyc makestep
