@@ -1,6 +1,6 @@
 # START ########################################################
 cat <<'__COMMENT__'
-<link rel="stylesheet" href="./css/github-gist.css"><script src="./js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/ written by <a href="https://github.com/koginoadm">@koginoadm</a>
+<link rel="stylesheet" href="./css/github-gist.css"><script src="./js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/
 
 #### bash ####
 function genpasswd() { echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"; }
@@ -65,6 +65,6 @@ curl -LR https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 > /u
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
 
-# curl http://djeeno.info/ written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
+# written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
 __COMMENT__
 # END ##########################################################
