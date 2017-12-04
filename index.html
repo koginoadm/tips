@@ -3,6 +3,9 @@
 #### systemctl ####
 # systemctl list-unit-files
 
+#### SELinux ####
+# grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup
+
 #### find ####
 # find ./ -type f -exec chmod 644 {} \;
 # find ./ -type d -exec chmod 755 {} \;
