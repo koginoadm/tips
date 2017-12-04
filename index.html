@@ -55,8 +55,8 @@ httpd -V #Print the version and build parameters of httpd.
 
 #### ssh ####
 echo | ssh-keygen -N ""
-echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
-curl https://koginoadm.github.io/keys >> ~/.ssh/authorized_keys
+[ -f ~/.ssh/tmp ] || [ -f ~/.ssh/tmp.pub ] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
+curl https://koginoadm.github.io/keys >> ~/.ssh/authorized_keys && chmod 600 $_
 
 #### appendix ####
 curl checkip.amazonaws.com
