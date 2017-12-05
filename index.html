@@ -117,7 +117,7 @@ curl ipinfo.io
 #### frequently used ####
 _file=
 cp -pr ${_file:?}{,_$(date +%Y%m%d_%H%M%S).backup} && ls -l ${_file}_*.backup
-
+egrep -v '^[[:space:]]*#|^[[:space:]]*$' ${_file:?}
 
 
 
