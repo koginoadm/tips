@@ -95,6 +95,11 @@ httpd -S #Show the settings as parsed from the config file.
 httpd -t #Run syntax tests for configuration files only.
 httpd -v #Print the version of httpd.
 httpd -V #Print the version and build parameters of httpd.
+echo '<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{SERVER_PORT} !^443$
+    RewriteRule ^/(.*)?$ https://%{HTTP_HOST}/$1 [L,R]
+</IfModule>' > /etc/httpd/conf.d/ssl_rewrite.conf
 
 #### ssh ####
 echo | ssh-keygen -N ""
