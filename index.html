@@ -77,10 +77,14 @@ grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforc
 apt update
 yum makecache fast
 
-#### tools ####
+#### install ####
 apt -y install dnsutils perl unzip vim whois zip
 yum -y install bind-utils perl unzip vim whois zip
+curl -LR https://bootstrap.pypa.io/get-pip.py | python
 pip install speedtest-cli
+pip install awscli
+apt -y install fuse && curl -LR https://github.com/kahing/goofys/releases/download/v0.0.18/goofys -o /usr/bin/goofys && chmod 755 $_
+yum -y install fuse && curl -LR https://github.com/kahing/goofys/releases/download/v0.0.18/goofys -o /usr/bin/goofys && chmod 755 $_
 curl -LR https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o /usr/bin/jq && chmod +x $_
 
 #### ntp ####
@@ -103,14 +107,6 @@ curl http://djeeno.info/apache/ssl_rewrite.conf
 echo | ssh-keygen -N ""
 [ -f ~/.ssh/tmp -o -f ~/.ssh/tmp.pub ] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
 curl https://koginoadm.github.io/keys -o ~/.ssh/authorized_keys && chmod 600 $_
-
-#### python ####
-curl -LR https://bootstrap.pypa.io/get-pip.py | python
-
-#### aws ####
-pip install awscli
-apt -y install fuse && curl -LR https://github.com/kahing/goofys/releases/download/v0.0.18/goofys -o /usr/bin/goofys && chmod 755 $_
-yum -y install fuse && curl -LR https://github.com/kahing/goofys/releases/download/v0.0.18/goofys -o /usr/bin/goofys && chmod 755 $_
 
 #### appendix ####
 curl checkip.amazonaws.com
