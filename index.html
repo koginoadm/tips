@@ -76,8 +76,8 @@ apt update
 yum makecache fast
 
 #### tools ####
-apt -y install zip unzip
-yum -y install zip unzip
+apt -y install dnsutils perl unzip vim zip
+yum -y install bind-utils perl unzip vim zip
 pip install speedtest-cli
 curl -LR https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o /usr/bin/jq && chmod +x $_
 
@@ -112,6 +112,12 @@ yum -y install fuse && curl -LR https://github.com/kahing/goofys/releases/downlo
 #### appendix ####
 curl checkip.amazonaws.com
 curl ipinfo.io
+
+#### frequently used ####
+_file=
+cp -pr ${_file:?}{,_$(date +%Y%m%d_%H%M%S).backup} && ls -l $(basename -- $_)_*.backup
+
+
 
 
 # written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
