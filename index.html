@@ -47,10 +47,12 @@ echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"
 echo 172.16.1.{0..255} | xargs -P256 -n1 ping -s1 -c1 -W1 | \grep ttl | sort -V
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
-#### POSIX ####
+#### *nix ####
 vipw
 vigr
 visudo -f /etc/sudoers.d/admin
+ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+timedatectl set-timezone Asia/Tokyo
 
 #### alias ####
 alias rm='rm -i'
@@ -76,8 +78,8 @@ apt update
 yum makecache fast
 
 #### tools ####
-apt -y install dnsutils perl unzip vim zip
-yum -y install bind-utils perl unzip vim zip
+apt -y install dnsutils perl unzip vim whois zip
+yum -y install bind-utils perl unzip vim whois zip
 pip install speedtest-cli
 curl -LR https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o /usr/bin/jq && chmod +x $_
 
