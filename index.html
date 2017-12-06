@@ -131,7 +131,7 @@ grep 'default-character-set = utf8' /etc/my.cnf.d/server.cnf || sed 's@\(\[clien
 grep 'character-set-server = utf8'  /etc/my.cnf.d/server.cnf || sed 's@\(\[mysqld\]\)@\1\ncharacter-set-server = utf8'"$(date +'# %Y%m%d #')"'@g;'  -i /etc/my.cnf.d/server.cnf
 systemctl enable mariadb
 systemctl start mariadb
-[[ -r ~/.my.cnf ]] || echo -e '[client]\nuser = rootn\npassword = "'$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)'"' >> ~/.my.cnf
+[[ -r ~/.my.cnf ]] || echo -e '[client]\nuser = root\npassword = "'$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)'"' >> ~/.my.cnf
 mysql -u root --password= -e "
     UPDATE mysql.user SET Password=PASSWORD('$(grep ^password ~/.my.cnf | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')') WHERE User='root';
     DELETE FROM mysql.user WHERE User='';
@@ -148,7 +148,7 @@ yum -y install zabbix-server-mysql zabbix-web-mysql zabbix-web-japanese
 yum -y install zabbix-agent
 yum -y install zabbix-get
 yum-config-manager --disable zabbix zabbix-non-supported
-[[ -r ~/.my.cnf.zabbix ]] || echo -e '[client]\nuser = zabbixn\npassword = "'$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)'"' >> ~/.my.cnf.zabbix
+[[ -r ~/.my.cnf.zabbix ]] || echo -e '[client]\nuser = zabbix\npassword = "'$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)'"' >> ~/.my.cnf.zabbix
 mysql -u root -e "
     CREATE DATABASE IF NOT EXISTS zabbix CHARACTER SET utf8 COLLATE utf8_bin;
     GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost' IDENTIFIED BY '$(grep ^password ~/.my.cnf.zabbix | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')';
