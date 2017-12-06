@@ -56,6 +56,9 @@ visudo -f /etc/sudoers.d/admin
 ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 timedatectl set-timezone Asia/Tokyo
 
+#### CentOS ####
+curl http://djeeno.info/ROOT/etc/sysconfig/network-scripts/ifcfg-eth0
+
 #### alias ####
 alias rm='rm -i'
 alias cp='cp -i'
