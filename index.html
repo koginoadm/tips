@@ -138,20 +138,20 @@ mysql -u root --password= -e "
 )
 
 #### zabbix-server on CentOS7 ####
-rpm -q zabbix-server-mysql || (
+rpm -q mariadb-server zabbix-server-mysql || (
 yum -y install yum-utils http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-2.el7.noarch.rpm
 yum -y install zabbix-server-mysql zabbix-web-mysql zabbix-web-japanese
 yum -y install zabbix-agent
 yum -y install zabbix-get
 yum-config-manager --disable zabbix zabbix-non-supported
 [[ -r ~/.my.cnf.zabbix ]] || echo -e '[client]\nuser = zabbixn\npassword = "'$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)'"' >> ~/.my.cnf.zabbix
-mysql -u root --password="$(grep ^password ~/.my.cnf | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')" -e "
+mysql -u root -e "
     CREATE DATABASE IF NOT EXISTS zabbix CHARACTER SET utf8 COLLATE utf8_bin;
     GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost' IDENTIFIED BY '$(grep ^password ~/.my.cnf.zabbix | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')';
     FLUSH PRIVILEGES;"
-zcat /usr/share/doc/zabbix-server-mysql-3.4.*/create.sql.gz | mysql -u zabbix --password="$(grep ^password ~/.my.cnf.zabbix | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')" zabbix
-perl -pe 's/(# )(DBPassword=)/\1\2\n\2'$(grep ^password ~/.my.cnf.zabbix | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')'/g;' -i /etc/zabbix/zabbix_server.conf
-perl -pe "s@^( *)(# )(php_value date.timezone )(Europe/Riga)@\1\2\3\4\n\1\3Asia/Tokyo@g" -i /etc/httpd/conf.d/zabbix.conf
+zcat /usr/share/doc/zabbix-server-mysql-3.4.*/create.sql.gz | mysql --defaults-file=~/.my.cnf.zabbix -u zabbix zabbix
+sed 's/\(# \)\(DBPassword=\)/\1\2\n\2'$(grep ^password ~/.my.cnf.zabbix | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')'/g;' -i /etc/zabbix/zabbix_server.conf
+sed "s@^\( *\)\(# \)\(php_value date.timezone \)\(Europe/Riga\)@\1\2\3\4\n\1\3Asia/Tokyo@g" -i /etc/httpd/conf.d/zabbix.conf
 systemctl restart httpd
 systemctl enable zabbix-server
 systemctl start zabbix-server
