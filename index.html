@@ -56,6 +56,9 @@ visudo -f /etc/sudoers.d/admin
 ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 timedatectl set-timezone Asia/Tokyo
 
+#### VMware ESXi ####
+ls -l /etc/ssh/keys-root/authorized_keys
+
 #### CentOS ####
 curl http://djeeno.info/ROOT/etc/sysconfig/network-scripts/ifcfg-tmp
 
@@ -82,7 +85,7 @@ grep -q '^SELINUX=enforcing' /etc/selinux/config && { setenforce 0; sed 's/^\(SE
 apt update
 yum makecache fast
 
-#### install ####
+#### install utils ####
 apt -y install dnsutils perl unzip vim whois zip
 yum -y install bind-utils perl unzip vim whois zip
 curl -LR https://bootstrap.pypa.io/get-pip.py | python
@@ -108,8 +111,8 @@ httpd -v #Print the version of httpd.
 httpd -V #Print the version and build parameters of httpd.
 curl http://djeeno.info/apache/ssl_rewrite.conf
 
-#### esxi ####
-ls -l /etc/ssh/keys-root/authorized_keys
+#### OpenLDAP Server ####
+yum -y install openldap-servers
 
 #### ssh ####
 curl https://koginoadm.github.io/keys
