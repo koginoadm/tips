@@ -122,8 +122,8 @@ curl ipinfo.io
 rpm -q mariadb-server || (
 yum -y install mariadb-server
 cp -p /usr/share/mysql/my-small.cnf /etc/my.cnf.d/server.cnf
-grep 'default-character-set = utf8' /etc/my.cnf.d/server.cnf || perl -pe 's@(\[client\])@\1\ndefault-character-set = utf8'"$(date +'# %Y%m%d #')"'@g;' -i /etc/my.cnf.d/server.cnf
-grep 'character-set-server = utf8'  /etc/my.cnf.d/server.cnf || perl -pe 's@(\[mysqld\])@\1\ncharacter-set-server = utf8'"$(date +'# %Y%m%d #')"'@g;'  -i /etc/my.cnf.d/server.cnf
+grep 'default-character-set = utf8' /etc/my.cnf.d/server.cnf || sed 's@\(\[client\]\)@\1\ndefault-character-set = utf8'"$(date +'# %Y%m%d #')"'@g;' -i /etc/my.cnf.d/server.cnf
+grep 'character-set-server = utf8'  /etc/my.cnf.d/server.cnf || sed 's@\(\[mysqld\]\)@\1\ncharacter-set-server = utf8'"$(date +'# %Y%m%d #')"'@g;'  -i /etc/my.cnf.d/server.cnf
 systemctl enable mariadb
 systemctl start mariadb
 [[ -r ~/.my.cnf ]] || echo -e '[client]\nuser = rootn\npassword = "'$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)'"' >> ~/.my.cnf
