@@ -144,7 +144,7 @@ yum -y install zabbix-agent
 yum -y install zabbix-get
 yum-config-manager --disable zabbix zabbix-non-supported
 [[ -r ~/.my.cnf.zabbix ]] || echo -e '[client]\nuser = zabbixn\npassword = "'$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)'"' >> ~/.my.cnf.zabbix
-mysql -u root --password="$(grep ^password ~/.my.cnf | perl -pe 's/^password = "([a-zA-Z0-9]+)"/\1/g')" -e "
+mysql -u root --password="$(grep ^password ~/.my.cnf | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')" -e "
     CREATE DATABASE IF NOT EXISTS zabbix CHARACTER SET utf8 COLLATE utf8_bin;
     GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost' IDENTIFIED BY '$(grep ^password ~/.my.cnf.zabbix | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')';
     FLUSH PRIVILEGES;"
