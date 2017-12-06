@@ -105,10 +105,14 @@ httpd -v #Print the version of httpd.
 httpd -V #Print the version and build parameters of httpd.
 curl http://djeeno.info/apache/ssl_rewrite.conf
 
+#### esxi ####
+ls -l /etc/ssh/keys-root/authorized_keys
+
 #### ssh ####
+echo 'ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAmHliNKOjmnRCG4gdntmF30witZpGtCK7CdfnsohSexd0WgNWragj9aQepsrG6Dvzy6D060KttD6p/htFbnj7fqMsKS58ZLdfuFSUdKSG6GawZ608Hbw+nI79Tx768YAklGIL4cY4Q24fgq6hqBpYZd7n344c4GSBp4eqQj+1eCp8KfeE60HXb0sGUsJb9BlTMJMlHpyKMLhjq5/7yPrWye/n5OKvEEYb1qdrNpZ7FvVmkEj3ibxriMUYOpUrze4qYkVAXd/WD6FqASv3/hXv/7MIfOryhtO1k1xIB8Hks9H7xg7waDMXxjK5BDqvkSMR72Dm4pcZMm6eAsF4Rzf6Ew== https://koginoadm.github.io/keys' | tee -a ~/.ssh/authorized_keys
 echo | ssh-keygen -N ""
 [ -f ~/.ssh/tmp -o -f ~/.ssh/tmp.pub ] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
-curl https://koginoadm.github.io/keys -o ~/.ssh/authorized_keys && chmod 600 $_
+(curl https://koginoadm.github.io/keys | tee -a ~/.ssh/authorized_keys) && chmod 600 $_
 
 #### appendix ####
 curl checkip.amazonaws.com
