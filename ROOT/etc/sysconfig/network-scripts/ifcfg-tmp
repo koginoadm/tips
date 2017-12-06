@@ -9,8 +9,8 @@ IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
 
 # env
-NAME=eth0
-DEVICE=eth0
+NAME=tmp
+DEVICE=tmp
 DEFROUTE=yes
 DNS1=8.8.8.8
 DNS2=8.8.4.4
