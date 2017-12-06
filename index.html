@@ -149,7 +149,7 @@ mysql -u root --password="$(grep ^password ~/.my.cnf | sed 's/^password = .\([a-
     GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost' IDENTIFIED BY '$(grep ^password ~/.my.cnf.zabbix | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')';
     FLUSH PRIVILEGES;"
 zcat /usr/share/doc/zabbix-server-mysql-3.4.*/create.sql.gz | mysql -u zabbix --password="$(grep ^password ~/.my.cnf.zabbix | perl -pe 's/^password = "([a-zA-Z0-9]+)"/\1/g')" zabbix
-perl -pe 's/(# )(DBPassword=)/\1\2\n\2'$(grep ^password ~/.my.cnf.zabbix | perl -pe 's/^password = "([a-zA-Z0-9]+)"/\1/g')'/g;' -i /etc/zabbix/zabbix_server.conf
+perl -pe 's/(# )(DBPassword=)/\1\2\n\2'$(grep ^password ~/.my.cnf.zabbix | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')'/g;' -i /etc/zabbix/zabbix_server.conf
 perl -pe "s@^( *)(# )(php_value date.timezone )(Europe/Riga)@\1\2\3\4\n\1\3Asia/Tokyo@g" -i /etc/httpd/conf.d/zabbix.conf
 systemctl restart httpd
 systemctl enable zabbix-server
