@@ -140,7 +140,7 @@ ou: managers
 __EOF__
 
 # Confirm Entries.
-ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "${_SUFFIX}"
+ldapsearch -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.secret) -b "${_SUFFIX}"
 
 
 
@@ -150,17 +150,17 @@ dn: cn=read,ou=managers,${_SUFFIX}
 objectClass: inetOrgPerson
 mail: read@example.com
 sn: read
-userPassword: {CRYPT}$5$s305Qzc2$ZXTeaxokuQRhB0jDIsnYHotrh0nVvbPewbucSPDmhm/
+userPassword: {CRYPT}\$5\$s305Qzc2\$ZXTeaxokuQRhB0jDIsnYHotrh0nVvbPewbucSPDmhm/
 
 dn: cn=write,ou=managers,${_SUFFIX}
 objectClass: inetOrgPerson
 mail: write@example.com
 sn: write
-userPassword: {CRYPT}$5$EhL/EygZ$Zd6aB8R/ni8A/kA.vGlnaOq23SogmzwRfY/jYOIg2P0
+userPassword: {CRYPT}\$5\$EhL/EygZ\$Zd6aB8R/ni8A/kA.vGlnaOq23SogmzwRfY/jYOIg2P0
 __EOF__
 
 # Confirm Entries.
-ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "${_SUFFIX}"
+ldapsearch -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.secret) -b "${_SUFFIX}"
 
 
 
