@@ -51,6 +51,7 @@ ls -l /etc/openldap/schema/*.ldif
 
 # Add schemas.
 ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
+ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif
 ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
 ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
 
