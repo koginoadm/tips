@@ -56,7 +56,7 @@ alias grep='grep --color=auto'
 systemctl list-unit-files
 
 #### SELinux ####
-grep -q '^SELINUX=enforcing' /etc/selinux/config && { setenforce 0; sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup }
+grep -q '^SELINUX=enforcing' /etc/selinux/config && { setenforce 0; sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup; }
 
 #### Update Package Repository Database ####
 apt update
