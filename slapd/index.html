@@ -21,7 +21,7 @@ then
 fi
 
 # Copy default DB_CONFIG.example
-cp -pi /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+cp -pi /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG && chown ldap. $_
 
 systemctl enable slapd
 systemctl start slapd
