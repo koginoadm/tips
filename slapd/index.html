@@ -49,8 +49,10 @@ ldapsearch -v -LLL -H ldap://127.0.0.1 -x -D "cn=config" -w $(cat ~/.slapd.secre
 # List default prepared schemas.
 ls -l /etc/openldap/schema/*.ldif
 
-# Add ppolicy schema.
+# Add schemas.
 ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
+ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
 
 # Confirm that the schemas added.
 ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "cn=schema,cn=config" "dn"
@@ -123,20 +125,59 @@ objectClass: organizationalRole
 cn: ${_ROOTCN}
 description: Directory Manager
 
-dn: ou=people,${_SUFFIX}
+dn: ou=users,${_SUFFIX}
 objectClass: organizationalUnit
-ou: people
+ou: users
 
 dn: ou=groups,${_SUFFIX}
 objectClass: organizationalUnit
 ou: groups
+
+dn: ou=managers,${_SUFFIX}
+objectClass: organizationalUnit
+ou: managers
 __EOF__
 
 
 
+# Add Manager
+ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.secret) <<__EOF__
+dn: cn=read,ou=managers,${_SUFFIX}
+objectClass: inetOrgPerson
+mail: read@example.com
+sn: read
+
+dn: cn=write,ou=managers,${_SUFFIX}
+objectClass: inetOrgPerson
+mail: write@example.com
+sn: write
+__EOF__
 
 
 
+# Add ACL.
+ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: to attrs=userPassword,shadowLastChange
+              by dn=${_ROOTDN} write
+              by anonymous auth
+              by self write
+              by * none
+olcAccess: to dn.subtree=${_SUFFIX}
+              by dn=cn=readmgr,ou=managers,${_SUFFIX} read
+              by dn=cn=writemgr,ou=managers,${_SUFFIX} write
+olcAccess: to *
+              by dn=cn=root,dc=example,dc=jp write
+__EOF__
+
+#ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
+#dn: olcDatabase={2}hdb,cn=config
+#changetype: modify
+#delete: olcAccess
+#olcAccess: {0}
+#__EOF__
 
 
 
