@@ -89,7 +89,7 @@ _ROOTDN="cn=root,${_SUFFIX}"
 test -f ~/.slapd.${_ROOTDN}.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
 ls -l ~/.slapd.${_ROOTDN}.secret && chmod 600 $_ && chown ldap. $_ && ls -l $_
 
-# Set  RootPW for Suffix.
+# Set RootDN & RootPW for Suffix.
 ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
@@ -102,7 +102,7 @@ replace: olcRootPW
 olcRootPW: 
 __EOF__
 
-# Confirm Suffix
+# Confirm & RootDN & RootPW for Suffix.
 ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "olcDatabase={2}hdb,cn=config" "olcSuffix" "olcRootDN" "olcRootPW"
 
 
