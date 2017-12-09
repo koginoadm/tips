@@ -41,7 +41,7 @@ olcRootPW: $(slappasswd -h {CRYPT} -c '$5$%.8s' -T ~/.slapd.secret)
 __EOF__
 
 # Confirm RootPW.
-ldapsearch -v -LLL -x -w $(cat ~/.slapd.secret) -D "cn=config" -b "olcDatabase={0}config,cn=config" "(objectClass=olcDatabaseConfig)" "*"
+ldapsearch -v -LLL -x -w $(cat ~/.slapd.secret) -D "cn=config" -b "olcDatabase={0}config,cn=config" "(objectClass=olcDatabaseConfig)"
 
 
 # List default prepared schemas.
@@ -63,7 +63,11 @@ replace: olcSuffix
 olcSuffix: ${_SUFFIX}
 __EOF__
 
-ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
+# Confirm 
+ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "olcDatabase={2}hdb,cn=config" "(objectclass=*)"
+
+# 
+ldapmodify -v -Y EXTERNAL -H ldapi:/// <<'__EOF__'
 dn: cn=config
 changetype: modify
 replace: olcPasswordHash
@@ -75,7 +79,8 @@ replace: olcPasswordCryptSaltFormat
 olcPasswordCryptSaltFormat: $5$%.8s
 __EOF__
 
-
+# Confirm 
+ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" "(objectClass=olcGlobal)" "*"
 
 
 
