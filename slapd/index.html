@@ -42,7 +42,7 @@ olcRootPW: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.secret)
 __EOF__
 
 # Confirm RootPW for cn=config.
-ldapsearch -v -LLL -x -w $(cat ~/.slapd.secret) -H ldap://127.0.0.1 -D "cn=config" -b "olcDatabase={0}config,cn=config" "olcRootPW"
+ldapsearch -v -LLL -H ldap://127.0.0.1 -x -D "cn=config" -w $(cat ~/.slapd.secret) -b "olcDatabase={0}config,cn=config" "olcRootPW"
 
 
 
@@ -53,7 +53,7 @@ ls -l /etc/openldap/schema/*.ldif
 ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
 
 # Confirm that the schemas added.
-ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=schema,cn=config" "dn"
+ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "cn=schema,cn=config" "dn"
 
 
 
@@ -71,7 +71,7 @@ olcPasswordCryptSaltFormat: $5$%.8s
 __EOF__
 
 # Confirm PasswordHash & PasswordCryptSaltFormat
-ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" "(cn=config)" "olcPasswordHash" "olcPasswordCryptSaltFormat"
+ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "cn=config" "(cn=config)" "olcPasswordHash" "olcPasswordCryptSaltFormat"
 
 
 
@@ -85,7 +85,8 @@ olcSuffix: ${_SUFFIX}
 __EOF__
 
 # Generate RootDN & RootPW for Suffix.
-_ROOTDN="cn=root,${_SUFFIX}"
+_ROOTCN="root"
+_ROOTDN="cn=${_ROOTCN},${_SUFFIX}"
 test -f ~/.slapd.${_ROOTDN}.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
 ls -l ~/.slapd.${_ROOTDN}.secret && chmod 600 $_ && chown ldap. $_ && ls -l $_
 
@@ -102,15 +103,33 @@ replace: olcRootPW
 olcRootPW: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.${_ROOTDN}.secret)
 __EOF__
 
-# Confirm & RootDN & RootPW for Suffix.
-ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "olcDatabase={2}hdb,cn=config" "olcSuffix" "olcRootDN" "olcRootPW"
+# Confirm RootDN & RootPW for Suffix.
+ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "olcDatabase={2}hdb,cn=config" "olcSuffix" "olcRootDN" "olcRootPW"
 
 
 
 # 
-ldapadd -v -x 
+_DOMAIN=example.com
+ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.secret) <<__EOF__
+dn: ${_SUFFIX}
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: ${_DOMAIN}
 
+dn: ${_ROOTDN}
+objectClass: organizationalRole
+cn: ${_ROOTCN}
+description: Directory Manager
 
+dn: ou=people,${_SUFFIX}
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,${_SUFFIX}
+objectClass: organizationalUnit
+ou: groups
+__EOF__
 
 
 
