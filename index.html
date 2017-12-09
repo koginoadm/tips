@@ -61,6 +61,7 @@ ls -l /etc/ssh/keys-root/authorized_keys
 
 #### CentOS ####
 curl http://djeeno.info/ROOT/etc/sysconfig/network-scripts/ifcfg-tmp
+ip a | grep ^[0-9] | sed 's/^[0-9]\+: //g; s/:.\+//g;'
 
 #### alias ####
 alias rm='rm -i'
