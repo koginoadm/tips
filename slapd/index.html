@@ -56,6 +56,34 @@ replace: olcSuffix
 olcSuffix: ${_SUFFIX}
 __EOF__
 
+ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
+dn: cn=config
+changetype: modify
+replace: olcPasswordHash
+olcPasswordHash: {CRYPT}
+
+dn: cn=config
+changetype: modify
+replace: olcPasswordCryptSaltFormat
+olcPasswordCryptSaltFormat: $5$%.8s
+__EOF__
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
