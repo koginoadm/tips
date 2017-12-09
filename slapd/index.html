@@ -39,6 +39,9 @@ add: olcRootPW
 olcRootPW: $(slappasswd -T ~/.slapd.secret)
 __EOF__
 
+# Add default prepared schemas
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
+
 # List schemas
 ldapsearch -LLL -x -w $(cat ~/.slapd.secret) -D cn=config -b cn=config "(objectClass=olcSchemaConfig)" dn
 
