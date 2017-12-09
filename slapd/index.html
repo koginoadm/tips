@@ -113,7 +113,7 @@ ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "olcDatabase={2}hdb,cn=config"
 
 
 
-# Add Entries.
+# Add OUs.
 ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.secret) <<__EOF__
 dn: ${_SUFFIX}
 objectClass: top
@@ -150,11 +150,13 @@ dn: cn=read,ou=managers,${_SUFFIX}
 objectClass: inetOrgPerson
 mail: read@${_DOMAIN}
 userPassword: {CRYPT}\$5\$s305Qzc2\$ZXTeaxokuQRhB0jDIsnYHotrh0nVvbPewbucSPDmhm/
+sn: test
 
 dn: cn=write,ou=managers,${_SUFFIX}
 objectClass: inetOrgPerson
 mail: write@${_DOMAIN}
 userPassword: {CRYPT}\$5\$EhL/EygZ\$Zd6aB8R/ni8A/kA.vGlnaOq23SogmzwRfY/jYOIg2P0
+sn: test
 __EOF__
 
 # Confirm Entries.
