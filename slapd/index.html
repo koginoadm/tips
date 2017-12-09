@@ -32,7 +32,7 @@ test -f ~/.slapd.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head
 chmod 600 ~/.slapd.secret && chown ldap. $_
 
 # Set RootPW.
-ldapmodify -Y EXTERNAL -H ldapi:// <<__EOF__
+ldapmodify -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={0}config,cn=config
 changetype: modify
 add: olcRootPW
@@ -40,15 +40,15 @@ olcRootPW: $(slappasswd -T ~/.slapd.secret)
 __EOF__
 
 # Add default prepared schemas.
-ldapadd -Y EXTERNAL -H ldapi:// -f /etc/openldap/schema/ppolicy.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
 
 # Confirm that the schema added.
 ldapsearch -LLL -x -w $(cat ~/.slapd.secret) -D "cn=config" -b "cn=config" "(objectClass=olcSchemaConfig)" dn
-ldapsearch -LLL -Y EXTERNAL -H ldapi:// -Q -b "cn=config" "(objectClass=olcSchemaConfig)" dn
-ldapsearch -LLL -Y EXTERNAL -H ldapi:// -Q -b "cn=config" dn
+ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" "(objectClass=olcSchemaConfig)" dn
+ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" dn
 
 # Set Suffix
-ldapmodify -Y EXTERNAL -H ldapi:// <<__EOF__
+ldapmodify -vv -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 replace: olcSuffix
