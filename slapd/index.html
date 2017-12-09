@@ -23,12 +23,13 @@ fi
 # Copy default DB_CONFIG.example
 cp -pi /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG && chown ldap. $_
 
+# Start slapd
 systemctl enable slapd
 systemctl start slapd
 
-# 
-[ -f ~/.slapd.secret ] || cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16 > ~/.slapd.secret
-chown root. ~/.slapd.secret
+# Generate RootDN password
+test -f ~/.slapd.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
+chmod 600 ~/.slapd.secret && chown ldap. $_
 
 # 
 ldapmodify -Y EXTERNAL -H ldapi:/// <<__EOF__
