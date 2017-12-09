@@ -51,8 +51,7 @@ ls -l /etc/openldap/schema/*.ldif
 ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
 
 # Confirm that the schema added.
-ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" "(objectClass=olcSchemaConfig)" "dn"
-
+ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=schema,cn=config" "dn"
 
 # Set Suffix
 _SUFFIX=dc=example,dc=com
