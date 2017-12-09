@@ -31,13 +31,16 @@ systemctl start slapd
 test -f ~/.slapd.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
 chmod 600 ~/.slapd.secret && chown ldap. $_
 
-# 
+# Setting RootDN password
 ldapmodify -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={0}config,cn=config
 changetype: modify
 add: olcRootPW
 olcRootPW: $(slappasswd -T ~/.slapd.secret)
 __EOF__
+
+# List schemas
+ldapsearch -LLL -x -w $(cat ~/.slapd.secret) -D cn=config -b cn=config "(objectClass=olcSchemaConfig)" dn
 
 # written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
 __COMMENT__
