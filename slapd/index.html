@@ -180,6 +180,8 @@ __EOF__
 #olcAccess: {0}
 #__EOF__
 
+# Confirm ACL.
+ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "olcDatabase={2}hdb,cn=config" "olcAccess"
 
 
 
