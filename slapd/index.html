@@ -99,7 +99,7 @@ olcRootDN: ${_ROOTDN}
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 replace: olcRootPW
-olcRootPW: 
+olcRootPW: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.${_ROOTDN}.secret)
 __EOF__
 
 # Confirm & RootDN & RootPW for Suffix.
