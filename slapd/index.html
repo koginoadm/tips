@@ -2,7 +2,7 @@
 cat <<'__COMMENT__'
 <link rel="stylesheet" href="/css/vs2015.css"><script src="/js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0;margin:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/
 
-if systemctl status firewalld >/dev/null 
+if systemctl status firewalld > /dev/null 
 then
     firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp -m tcp --dport 389 -j ACCEPT
     firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp -m tcp --dport 636 -j ACCEPT
