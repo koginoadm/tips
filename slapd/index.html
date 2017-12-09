@@ -3,7 +3,7 @@ cat <<'__COMMENT__'
 <link rel="stylesheet" href="/css/vs2015.css"><script src="/js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0;margin:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/
 
 # Disable SELinux
-grep -q '^SELINUX=enforcing' /etc/selinux/config && { setenforce 0; sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup; }
+grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup && setenforce 0
 
 # Allow LDAP and LDAPS for Firewalld
 if systemctl status firewalld > /dev/null 
