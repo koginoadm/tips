@@ -27,11 +27,11 @@ cp -pi /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG && 
 systemctl enable slapd
 systemctl start slapd
 
-# Generate RootDN password.
+# Generate RootPW.
 test -f ~/.slapd.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
 chmod 600 ~/.slapd.secret && chown ldap. $_
 
-# Set RootDN password.
+# Set RootPW.
 ldapmodify -Y EXTERNAL -H ldapi:// <<__EOF__
 dn: olcDatabase={0}config,cn=config
 changetype: modify
