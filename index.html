@@ -101,6 +101,13 @@ ntpdate -v ntp.nict.jp
 chronyc sources
 chronyc makestep
 
+#### postfix ####
+mailq                 # List queues
+postqueue -p          # List queues
+postfix flush         # Force to send queues
+postsuper -d QUEUE_ID # Delete QUEUE_ID
+postsuper -d ALL      # Delete all queues
+
 #### apache ####
 httpd -h #help
 httpd -l #Output a list of modules compiled into the server.
