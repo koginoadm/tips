@@ -36,7 +36,7 @@ ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={0}config,cn=config
 changetype: modify
 add: olcRootPW
-olcRootPW: $(slappasswd -T ~/.slapd.secret)
+olcRootPW: $(slappasswd -h {CRYPT} -c '$5$%.8s' -T ~/.slapd.secret)
 __EOF__
 
 # Add default prepared schemas.
