@@ -28,6 +28,7 @@ systemctl enable slapd
 systemctl start slapd
 
 
+
 # Generate RootPW.
 test -f ~/.slapd.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
 chmod 600 ~/.slapd.secret && chown ldap. $_
@@ -44,6 +45,7 @@ __EOF__
 ldapsearch -v -LLL -x -w $(cat ~/.slapd.secret) -D "cn=config" -b "olcDatabase={0}config,cn=config" "olcRootPW"
 
 
+
 # List default prepared schemas.
 ls -l /etc/openldap/schema/*.ldif
 
@@ -52,6 +54,8 @@ ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
 
 # Confirm that the schema added.
 ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=schema,cn=config" "dn"
+
+
 
 # Set Suffix
 _SUFFIX=dc=example,dc=com
@@ -65,7 +69,9 @@ __EOF__
 # Confirm 
 ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "olcDatabase={2}hdb,cn=config" "olcSuffix"
 
-# 
+
+
+# Set PasswordHash & PasswordCryptSaltFormat
 ldapmodify -v -Y EXTERNAL -H ldapi:/// <<'__EOF__'
 dn: cn=config
 changetype: modify
