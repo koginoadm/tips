@@ -5,6 +5,13 @@ cat <<'__COMMENT__'
 # Disable SELinux
 grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup && setenforce 0
 
+# Update packages
+yum makecache fast
+yum -y update
+
+# Install OpenLDAP Server
+yum -y install openldap-servers openldap-clients
+
 # Allow LDAP and LDAPS for Firewalld
 if systemctl status firewalld > /dev/null 
 then
@@ -12,9 +19,6 @@ then
     firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp -m tcp --dport 636 -j ACCEPT
     firewall-cmd --reload
 fi
-
-# Install OpenLDAP Server
-yum -y install openldap-servers openldap-clients
 
 
 systemctl enable slapd
