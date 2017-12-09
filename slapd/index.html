@@ -4,8 +4,6 @@ cat <<'__COMMENT__'
 
 if systemctl status firewalld >/dev/null 
 then
-    firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -m state --state RELATED,ESTABLISHED -j ACCEPT
-    firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -i lo -j ACCEPT
     firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp -m tcp --dport 389 -j ACCEPT
     firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp -m tcp --dport 636 -j ACCEPT
     firewall-cmd --reload
