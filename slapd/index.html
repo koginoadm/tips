@@ -75,8 +75,15 @@ ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "cn=config" "(cn=config)" "olc
 
 
 
-# Set Suffix
+# Variables
 _SUFFIX="dc=example,dc=com"
+_ROOTCN="root"
+_ROOTDN="cn=${_ROOTCN},${_SUFFIX}"
+_DOMAIN=example.com
+
+
+
+# Set Suffix
 ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
@@ -85,8 +92,6 @@ olcSuffix: ${_SUFFIX}
 __EOF__
 
 # Generate RootDN & RootPW for Suffix.
-_ROOTCN="root"
-_ROOTDN="cn=${_ROOTCN},${_SUFFIX}"
 test -f ~/.slapd.${_ROOTDN}.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
 ls -l ~/.slapd.${_ROOTDN}.secret && chmod 600 $_ && chown ldap. $_ && ls -l $_
 
@@ -109,7 +114,6 @@ ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "olcDatabase={2}hdb,cn=config"
 
 
 # 
-_DOMAIN=example.com
 ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.secret) <<__EOF__
 dn: ${_SUFFIX}
 objectClass: top
