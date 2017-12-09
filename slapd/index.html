@@ -237,8 +237,8 @@ _CRT="${_CRT_DIR}/${_FQDN}.crt"
 # Copy key & csr
 _LDAPS_KEY="/etc/openldap/certs/server.key"
 _LDAPS_CRT="/etc/openldap/certs/server.crt"
-cp -pi ${_KEY} ${_LDAP_KEY} && chown ldap. $_ && ls -l $_
-cp -pi ${_CRT} ${_LDAP_CRT} && chown ldap. $_ && ls -l $_
+cp -pi ${_KEY} ${_LDAPS_KEY} && chown ldap. $_ && ls -l $_
+cp -pi ${_CRT} ${_LDAPS_CRT} && chown ldap. $_ && ls -l $_
 
 # Set LDAPS key
 ldapmodify -v -Y EXTERNAL -Q -H ldapi:/// <<__EOF__
