@@ -27,6 +27,7 @@ cp -pi /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG && 
 systemctl enable slapd
 systemctl start slapd
 
+
 # Generate RootPW.
 test -f ~/.slapd.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
 chmod 600 ~/.slapd.secret && chown ldap. $_
@@ -40,16 +41,18 @@ olcRootPW: $(slappasswd -h {CRYPT} -c '$5$%.8s' -T ~/.slapd.secret)
 __EOF__
 
 # Confirm RootPW.
-cat ~/.slapd.secret
-ldapsearch -v -LLL -x -W -D "cn=config" -b "olcDatabase={0}config,cn=config" "(objectClass=olcDatabaseConfig)" "*"
+ldapsearch -v -LLL -x -w $(cat ~/.slapd.secret) -D "cn=config" -b "olcDatabase={0}config,cn=config" "(objectClass=olcDatabaseConfig)" "*"
 
-# Add default prepared schemas.
+
+# List default prepared schemas.
+ls -l /etc/openldap/schema/*.ldif
+
+# Add ppolicy schema.
 ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
 
 # Confirm that the schema added.
-ldapsearch -v -LLL -x -w $(cat ~/.slapd.secret) -D "cn=config" -b "cn=config" "(objectClass=olcSchemaConfig)" dn
-ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" "(objectClass=olcSchemaConfig)" dn
-ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" dn
+ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" "(objectClass=olcSchemaConfig)" "dn"
+
 
 # Set Suffix
 _SUFFIX=dc=example,dc=com
