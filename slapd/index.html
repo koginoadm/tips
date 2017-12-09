@@ -240,6 +240,8 @@ _LDAPS_CRT="/etc/openldap/certs/server.crt"
 cp -pi ${_KEY} ${_LDAPS_KEY} && chown ldap. $_ && ls -l $_
 cp -pi ${_CRT} ${_LDAPS_CRT} && chown ldap. $_ && ls -l $_
 
+
+
 # Set LDAPS key
 ldapmodify -v -Y EXTERNAL -Q -H ldapi:/// <<__EOF__
 dn: cn=config
