@@ -65,8 +65,10 @@ curl http://djeeno.info/ROOT/etc/sysconfig/network-scripts/ifcfg-tmp
 
 #### Firewalld ####
 _nic=$(\ip a | \grep ^[0-9] | \sed 's/^[0-9]\+: //g; s/:.\+//g;' | \grep ^e | \head -n 1)
-firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1000 -p tcp -m tcp --dport=25 -o $_nic -j DROP
-firewall-cmd --reload
+firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 10 -p tcp -m tcp --dport=25 -o $_nic -j DROP
+systemctl restart firewalld
+firewall-cmd --permanent --direct --remove-rule ipv4 filter OUTPUT 10 -p tcp -m tcp --dport=25 -o $_nic -j DROP
+systemctl restart firewalld
 
 #### alias ####
 alias rm='rm -i'
