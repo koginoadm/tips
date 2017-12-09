@@ -253,7 +253,14 @@ replace: olcTLSCertificateKeyFile
 olcTLSCertificateKeyFile: /etc/openldap/certs/server.key
 __EOF__
 
+# Set LDAPS Uri
 sed 's@^\(SLAPD_URLS=\)\("ldapi:/// ldap:///"\)@#\1\2\n'"$(date +'# %Y%m%d #')"'\n\1"ldapi:/// ldaps:/// ldap:///"@g' -i /etc/sysconfig/slapd && cat $_
+
+
+
+# Backup
+slapcat -b cn=config
+slapcat -b "${_SUFFIX}"
 
 
 
