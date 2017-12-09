@@ -148,14 +148,12 @@ ldapsearch -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN
 ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.secret) <<__EOF__
 dn: cn=read,ou=managers,${_SUFFIX}
 objectClass: inetOrgPerson
-mail: read@example.com
-sn: read
+mail: read@${_DOMAIN}
 userPassword: {CRYPT}\$5\$s305Qzc2\$ZXTeaxokuQRhB0jDIsnYHotrh0nVvbPewbucSPDmhm/
 
 dn: cn=write,ou=managers,${_SUFFIX}
 objectClass: inetOrgPerson
-mail: write@example.com
-sn: write
+mail: write@${_DOMAIN}
 userPassword: {CRYPT}\$5\$EhL/EygZ\$Zd6aB8R/ni8A/kA.vGlnaOq23SogmzwRfY/jYOIg2P0
 __EOF__
 
@@ -191,6 +189,37 @@ __EOF__
 
 # Confirm ACL.
 ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "olcDatabase={2}hdb,cn=config" "olcAccess"
+
+
+
+# Add test users & groups.
+ldapadd -v -H ldap://127.0.0.1 -x -D cn=write,ou=managers,${_SUFFIX} -W <<__EOF__
+dn: uid=user01,ou=users,${_SUFFIX}
+objectClass: inetOrgPerson
+mail: user01@${_DOMAIN}
+uid: user01
+cn: user01
+sn: test
+userPassword: {CRYPT}\$5\$o2kwEy.C\$BeTW3wl2HLEyJpHVB6PYHMU8c/.gU0NePNEjNIulmo9
+
+dn: cn=group01,ou=groups,${_SUFFIX}
+objectClass: groupOfNames
+cn: group01
+member: uid=user01,ou=users,${_SUFFIX}
+
+dn: uid=user02,ou=users,${_SUFFIX}
+objectClass: inetOrgPerson
+mail: user02@${_DOMAIN}
+uid: user02
+cn: user02
+sn: test
+userPassword: {CRYPT}\$5\$MGClgc.R\$TLpTaPPMT7dxqnBLw1O7IlVDICwhBwr8WaT4rBycjN5
+
+dn: cn=group02,ou=groups,${_SUFFIX}
+objectClass: groupOfNames
+cn: group02
+member: uid=user02,ou=users,${_SUFFIX}
+__EOF__
 
 
 
