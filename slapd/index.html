@@ -259,8 +259,8 @@ sed 's@^\(SLAPD_URLS=\)\("ldapi:/// ldap:///"\)@#\1\2\n'"$(date +'# %Y%m%d #')"'
 
 
 # Backup
-slapcat -b cn=config
-slapcat -b "${_SUFFIX}"
+slapcat -b cn=config > ~/backup_$(date +\%Y\%m\%d)_cn=config.ldif
+slapcat -b "${_SUFFIX}" > ~/backup_$(date +\%Y\%m\%d)_${_SUFFIX}.ldif
 
 
 
