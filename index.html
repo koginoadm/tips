@@ -52,7 +52,7 @@ for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i
 #### *nix ####
 vipw
 vigr
-visudo -f /etc/sudoers.d/admin
+visudo -f /etc/sudoers.d/administrators
 ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 timedatectl set-timezone Asia/Tokyo
 
