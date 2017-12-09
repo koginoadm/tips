@@ -37,7 +37,7 @@ ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={0}config,cn=config
 changetype: modify
 add: olcRootPW
-olcRootPW: $(slappasswd -h {CRYPT} -c '$5$%.8s' -T ~/.slapd.secret)
+olcRootPW: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.secret)
 __EOF__
 
 # Confirm RootPW.
