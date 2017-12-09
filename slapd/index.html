@@ -160,9 +160,16 @@ ldapmodify -v -Y EXTERNAL -Q -H ldapi:/// <<__EOF__
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 add: olcAccess
-olcAccess: to attrs=userPassword,shadowLastChange by dn="${_ROOTDN}" write by anonymous auth by self write by * none
-olcAccess: to dn.subtree="${_SUFFIX}" by dn="cn=read,ou=managers,${_SUFFIX}" read by dn="cn=write,ou=managers,${_SUFFIX}" write
-olcAccess: to * by dn="${_ROOTDN}" write
+olcAccess: to attrs=userPassword,shadowLastChange
+  by dn="${_ROOTDN}" write
+  by anonymous auth
+  by self write
+  by * none
+olcAccess: to dn.subtree="${_SUFFIX}"
+  by dn="cn=read,ou=managers,${_SUFFIX}" read
+  by dn="cn=write,ou=managers,${_SUFFIX}" write
+olcAccess: to *
+  by dn="${_ROOTDN}" write
 __EOF__
 
 ## Delete ACL.
