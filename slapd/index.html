@@ -223,8 +223,38 @@ __EOF__
 
 
 
+# Generate key & csr
+_FQDN=localhost
+_KEY_DIR="/etc/pki/tls/private"
+_CRT_DIR="/etc/pki/tls/certs"
+_KEY="${_KEY_DIR}/${_FQDN}.key"
+_CSR="${_KEY_DIR}/${_FQDN}.csr"
+_CRT="${_CRT_DIR}/${_FQDN}.crt"
+[ -f "${_KEY}" ] || openssl genrsa 2048 > ${_KEY}
+[ -f "${_CSR}" ] || openssl req -new -key ${_KEY} -subj "/C=JP/CN=${_FQDN}" > ${_CSR}
+[ -f "${_CRT}" ] || openssl x509 -days 3650 -req -signkey ${_KEY} < ${_CSR} > ${_CRT}
 
+# Copy key & csr
+_LDAP_KEY="/etc/openldap/certs/server.key"
+_LDAP_CRT="/etc/openldap/certs/server.crt"
+cp -pi ${_KEY} ${_LDAP_KEY}
+cp -pi ${_CRT} ${_LDAP_CRT}
+chown ldap. /etc/openldap/certs/server.key
+chown ldap. /etc/openldap/certs/server.crt
 
+ldapmodify -v -Y EXTERNAL -Q -H ldapi:/// <<__EOF__
+dn: cn=config
+changetype: modify
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/openldap/certs/server.crt
+
+dn: cn=config
+changetype: modify
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/openldap/certs/server.key
+__EOF__
+
+sed 's@\(SLAPD_URLS=\)\("ldapi:/// ldap:///"\)@#\1\2\n'"$(date +'# %Y%m%d #')"'\n\1"ldapi:/// ldaps:/// ldap:///"@g' /etc/sysconfig/slapd -i
 
 
 
