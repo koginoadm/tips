@@ -140,7 +140,7 @@ __EOF__
 
 
 
-# Add Manager
+# Add managers
 ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.secret) <<__EOF__
 dn: cn=read,ou=managers,${_SUFFIX}
 objectClass: inetOrgPerson
@@ -156,22 +156,23 @@ __EOF__
 
 
 # Add ACL.
-ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
+ldapmodify -v -Y EXTERNAL -Q -H ldapi:/// <<__EOF__
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 replace: olcAccess
 olcAccess: to attrs=userPassword,shadowLastChange
-              by dn=${_ROOTDN} write
-              by anonymous auth
-              by self write
-              by * none
+  by dn=${_ROOTDN} write
+  by anonymous auth
+  by self write
+  by * none
 olcAccess: to dn.subtree=${_SUFFIX}
-              by dn=cn=readmgr,ou=managers,${_SUFFIX} read
-              by dn=cn=writemgr,ou=managers,${_SUFFIX} write
+  by dn=cn=read,ou=managers,${_SUFFIX} read
+  by dn=cn=write,ou=managers,${_SUFFIX} write
 olcAccess: to *
-              by dn=cn=root,dc=example,dc=jp write
+  by dn=${_ROOTDN} write
 __EOF__
 
+## Delete ACL.
 #ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
 #dn: olcDatabase={2}hdb,cn=config
 #changetype: modify
