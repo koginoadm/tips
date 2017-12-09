@@ -63,6 +63,11 @@ ls -l /etc/ssh/keys-root/authorized_keys
 curl http://djeeno.info/ROOT/etc/sysconfig/network-scripts/ifcfg-tmp
 \ip a | \grep ^[0-9] | \sed 's/^[0-9]\+: //g; s/:.\+//g;' | \grep ^e
 
+#### Firewalld ####
+_nic=$(\ip a | \grep ^[0-9] | \sed 's/^[0-9]\+: //g; s/:.\+//g;' | \grep ^e | \head -n 1)
+firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1000 -p tcp -m tcp --dport=25 -o $_nic -j DROP
+firewall-cmd --reload
+
 #### alias ####
 alias rm='rm -i'
 alias cp='cp -i'
