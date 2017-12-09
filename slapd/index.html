@@ -32,7 +32,7 @@ test -f ~/.slapd.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head
 chmod 600 ~/.slapd.secret && chown ldap. $_
 
 # Set RootDN password.
-ldapmodify -Y EXTERNAL -H ldapi:/// <<__EOF__
+ldapmodify -Y EXTERNAL -H ldapi:// <<__EOF__
 dn: olcDatabase={0}config,cn=config
 changetype: modify
 add: olcRootPW
@@ -40,7 +40,7 @@ olcRootPW: $(slappasswd -T ~/.slapd.secret)
 __EOF__
 
 # Add default prepared schemas.
-ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
+ldapadd -Y EXTERNAL -H ldapi:// -f /etc/openldap/schema/ppolicy.ldif
 
 # Confirm that the schema added.
 ldapsearch -LLL -x -w $(cat ~/.slapd.secret) -D "cn=config" -b "cn=config" "(objectClass=olcSchemaConfig)" dn
