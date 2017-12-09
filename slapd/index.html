@@ -80,7 +80,7 @@ olcPasswordCryptSaltFormat: $5$%.8s
 __EOF__
 
 # Confirm 
-ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" "(objectClass=olcGlobal)" "*"
+ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" "(objectClass=olcGlobal)"
 
 
 
