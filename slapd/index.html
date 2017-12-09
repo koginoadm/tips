@@ -2,17 +2,17 @@
 cat <<'__COMMENT__'
 <link rel="stylesheet" href="/css/vs2015.css"><script src="/js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0;margin:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/
 
-# Disable SELinux
+# Disable SELinux.
 grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup && setenforce 0
 
-# Update packages
+# Update packages.
 yum makecache fast
 yum -y update
 
-# Install OpenLDAP Server
+# Install OpenLDAP Server.
 yum -y install openldap-servers openldap-clients
 
-# Allow LDAP and LDAPS for Firewalld
+# Allow LDAP and LDAPS for Firewalld.
 if systemctl status firewalld > /dev/null 
 then
     firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp -m tcp --dport 389 -j ACCEPT
@@ -20,18 +20,18 @@ then
     firewall-cmd --reload
 fi
 
-# Copy default DB_CONFIG.example
+# Copy default DB_CONFIG.example.
 cp -pi /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG && chown ldap. $_
 
-# Start slapd
+# Start slapd.
 systemctl enable slapd
 systemctl start slapd
 
-# Generate RootDN password
+# Generate RootDN password.
 test -f ~/.slapd.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
 chmod 600 ~/.slapd.secret && chown ldap. $_
 
-# Setting RootDN password
+# Set RootDN password.
 ldapmodify -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={0}config,cn=config
 changetype: modify
@@ -39,10 +39,10 @@ add: olcRootPW
 olcRootPW: $(slappasswd -T ~/.slapd.secret)
 __EOF__
 
-# Add default prepared schemas
+# Add default prepared schemas.
 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
 
-# List schemas
+# Confirm that the schema added.
 ldapsearch -LLL -x -w $(cat ~/.slapd.secret) -D cn=config -b cn=config "(objectClass=olcSchemaConfig)" dn
 
 # written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
