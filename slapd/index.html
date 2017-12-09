@@ -84,8 +84,8 @@ _ROOTDN="cn=${_ROOTCN},${_SUFFIX}"
 
 
 # Generate RootDN & RootPW for Suffix.
-test -f ~/.slapd.${_ROOTCN}.${_DOMAIN}.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
-ls -l   ~/.slapd.${_ROOTCN}.${_DOMAIN}.secret && chmod 600 $_ && chown ldap. $_ && ls -l $_
+test -f ~/.slapd.${_ROOTDN}.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
+ls -l   ~/.slapd.${_ROOTDN}.secret && chmod 600 $_ && chown ldap. $_ && ls -l $_
 
 # Set Suffix & RootDN & RootPW for Suffix.
 ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
