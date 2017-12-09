@@ -235,13 +235,12 @@ _CRT="${_CRT_DIR}/${_FQDN}.crt"
 [ -f "${_CRT}" ] || openssl x509 -days 3650 -req -signkey ${_KEY} < ${_CSR} > ${_CRT}
 
 # Copy key & csr
-_LDAP_KEY="/etc/openldap/certs/server.key"
-_LDAP_CRT="/etc/openldap/certs/server.crt"
-cp -pi ${_KEY} ${_LDAP_KEY}
-cp -pi ${_CRT} ${_LDAP_CRT}
-chown ldap. /etc/openldap/certs/server.key
-chown ldap. /etc/openldap/certs/server.crt
+_LDAPS_KEY="/etc/openldap/certs/server.key"
+_LDAPS_CRT="/etc/openldap/certs/server.crt"
+cp -pi ${_KEY} ${_LDAP_KEY} && chown ldap. $_ && ls -l $_
+cp -pi ${_CRT} ${_LDAP_CRT} && chown ldap. $_ && ls -l $_
 
+# Set LDAPS key
 ldapmodify -v -Y EXTERNAL -Q -H ldapi:/// <<__EOF__
 dn: cn=config
 changetype: modify
