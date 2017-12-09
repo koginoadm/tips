@@ -150,11 +150,13 @@ dn: cn=read,ou=managers,${_SUFFIX}
 objectClass: inetOrgPerson
 mail: read@example.com
 sn: read
+userPassword: {CRYPT}$5$s305Qzc2$ZXTeaxokuQRhB0jDIsnYHotrh0nVvbPewbucSPDmhm/
 
 dn: cn=write,ou=managers,${_SUFFIX}
 objectClass: inetOrgPerson
 mail: write@example.com
 sn: write
+userPassword: {CRYPT}$5$EhL/EygZ$Zd6aB8R/ni8A/kA.vGlnaOq23SogmzwRfY/jYOIg2P0
 __EOF__
 
 # Confirm Entries.
