@@ -29,11 +29,11 @@ systemctl start slapd
 
 
 
-# Generate RootPW.
+# Generate RootPW for cn=config.
 test -f ~/.slapd.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
 ls -l ~/.slapd.secret && chmod 600 $_ && chown ldap. $_ && ls -l $_
 
-# Set RootPW.
+# Set RootPW for cn=config.
 ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={0}config,cn=config
 changetype: modify
@@ -41,7 +41,7 @@ add: olcRootPW
 olcRootPW: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.secret)
 __EOF__
 
-# Confirm RootPW.
+# Confirm RootPW for cn=config.
 ldapsearch -v -LLL -x -w $(cat ~/.slapd.secret) -D "cn=config" -b "olcDatabase={0}config,cn=config" "olcRootPW"
 
 
@@ -54,20 +54,6 @@ ldapadd -v -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/ppolicy.ldif
 
 # Confirm that the schemas added.
 ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=schema,cn=config" "dn"
-
-
-
-# Set Suffix
-_SUFFIX=dc=example,dc=com
-ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
-dn: olcDatabase={2}hdb,cn=config
-changetype: modify
-replace: olcSuffix
-olcSuffix: ${_SUFFIX}
-__EOF__
-
-# Confirm Suffix
-ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "olcDatabase={2}hdb,cn=config" "olcSuffix"
 
 
 
@@ -89,7 +75,39 @@ ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" "(cn=config)" "olc
 
 
 
+# Set Suffix
+_SUFFIX="dc=example,dc=com"
+ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcSuffix: ${_SUFFIX}
+__EOF__
 
+# Generate RootDN & RootPW for Suffix.
+_ROOTDN="cn=root,${_SUFFIX}"
+test -f ~/.slapd.${_ROOTDN}.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
+ls -l ~/.slapd.${_ROOTDN}.secret && chmod 600 $_ && chown ldap. $_ && ls -l $_
+
+# Set  RootPW for Suffix.
+ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcRootDN
+olcRootDN: ${_ROOTDN}
+
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcRootPW
+olcRootPW: 
+__EOF__
+
+# Confirm Suffix
+ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "olcDatabase={2}hdb,cn=config" "olcSuffix" "olcRootDN" "olcRootPW"
+
+
+
+# Set RootDN & 
 
 
 
