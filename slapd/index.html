@@ -31,7 +31,7 @@ systemctl start slapd
 
 # Generate RootPW.
 test -f ~/.slapd.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
-ls -l ~/.slapd.secret && chmod 600 $_ && chown ldap. $_
+ls -l ~/.slapd.secret && chmod 600 $_ && chown ldap. $_ && ls -l $_
 
 # Set RootPW.
 ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
