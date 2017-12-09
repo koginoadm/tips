@@ -47,6 +47,18 @@ ldapsearch -LLL -x -w $(cat ~/.slapd.secret) -D "cn=config" -b "cn=config" "(obj
 ldapsearch -LLL -Y EXTERNAL -H ldapi:// -Q -b "cn=config" "(objectClass=olcSchemaConfig)" dn
 ldapsearch -LLL -Y EXTERNAL -H ldapi:// -Q -b "cn=config" dn
 
+# Set Suffix
+ldapmodify -Y EXTERNAL -H ldapi:// <<__EOF__
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcSuffix: dc=example,dc=com
+__EOF__
+
+
+
+
+
 # written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
 __COMMENT__
 # END ##########################################################
