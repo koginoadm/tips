@@ -48,11 +48,12 @@ ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" "(objectClass=olcS
 ldapsearch -v -LLL -Y EXTERNAL -H ldapi:/// -Q -b "cn=config" dn
 
 # Set Suffix
+_SUFFIX=dc=example,dc=com
 ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 replace: olcSuffix
-olcSuffix: dc=example,dc=com
+olcSuffix: ${_SUFFIX}
 __EOF__
 
 
