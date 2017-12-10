@@ -73,7 +73,7 @@ olcPasswordHash: {CRYPT}
 dn: cn=config
 changetype: modify
 replace: olcPasswordCryptSaltFormat
-olcPasswordCryptSaltFormat: $5$%.8s
+olcPasswordCryptSaltFormat: $6$%.8s
 __EOF__
 
 # Confirm PasswordHash & PasswordCryptSaltFormat
@@ -200,17 +200,22 @@ ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "olcDatabase={2}hdb,cn=config"
 # Add test users & groups.
 ldapadd -v -H ldap://127.0.0.1 -x -D cn=write,ou=managers,${_SUFFIX} -W <<__EOF__
 dn: uid=user01,ou=users,${_SUFFIX}
-objectClass: inetOrgPerson
-mail: user01@${_DOMAIN}
-uid: user01
+objectClass: posixAccount
 cn: user01
-sn: test
-userPassword: {CRYPT}\$5\$o2kwEy.C\$BeTW3wl2HLEyJpHVB6PYHMU8c/.gU0NePNEjNIulmo9
+uid: user01
+uidnumber: 38901
+gidNumber: 38901
+homeDirectory: /home/user01
+userPassword: {CRYPT}\$6\$b88shhJP\$R8ykn9EA7BwWvLtop8J7410ZCmgCYrNYozM8QdLqctSwMcFUV2URGQt6AwOJ1388h.TLjb7EMWOEQzCBjlvrR1
+loginShell
+gecos: LDAP test user
+description: LDAP test user
 
 dn: cn=group01,ou=groups,${_SUFFIX}
-objectClass: groupOfNames
+objectClass: posixGroup
 cn: group01
-member: uid=user01,ou=users,${_SUFFIX}
+gidNumber: 38901
+memberUid: user01
 
 dn: uid=user02,ou=users,${_SUFFIX}
 objectClass: inetOrgPerson
@@ -218,7 +223,7 @@ mail: user02@${_DOMAIN}
 uid: user02
 cn: user02
 sn: test
-userPassword: {CRYPT}\$5\$MGClgc.R\$TLpTaPPMT7dxqnBLw1O7IlVDICwhBwr8WaT4rBycjN5
+userPassword: {CRYPT}\$6\$b88shhJP\$R8ykn9EA7BwWvLtop8J7410ZCmgCYrNYozM8QdLqctSwMcFUV2URGQt6AwOJ1388h.TLjb7EMWOEQzCBjlvrR1
 
 dn: cn=group02,ou=groups,${_SUFFIX}
 objectClass: groupOfNames
@@ -273,6 +278,18 @@ slapcat -b cn=config > ~/backup_$(date +\%Y\%m\%d)_cn=config.ldif
 slapcat -b "${_SUFFIX}" > ~/backup_$(date +\%Y\%m\%d)_${_SUFFIX}.ldif
 
 
+
+# Client vars
+_LDAP_FQDN=id.example.com
+_SUFFIX="dc=example,dc=com"
+
+# Client setup
+yum -y install nscd nss-pam-ldapd
+egrep '^[psg][adhoprsuw]+: +files sss ldap' /etc/nsswitch.conf || sed 's@^\(passwd: \+files sss\)@\1 ldap@g; s@^\(shadow: \+files sss\)@\1 ldap@g; s@^\(group: \+files sss\)@\1 ldap@g;' $_ -i_$(date +%Y%m%d_%H%M%S).backup
+grep "^uri ldaps://${_LDAP_FQDN}/" /etc/nslcd.conf || sed "s@^\(uri ldap://127.0.0.1/\)@#\1\nuri ldaps://${_LDAP_FQDN}/@g" $_ -i_$(date +%Y%m%d_%H%M%S).backup
+grep "^base ${_SUFFIX}"            /etc/nslcd.conf || sed "s@^\(base dc=example,dc=com\)@#\1\n/base ${_SUFFIX}@g"          $_ -i_$(date +%Y%m%d_%H%M%S).backup
+authconfig --enablemkhomedir --update
+systemctl restart nslcd nscd
 
 # written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
 __COMMENT__
