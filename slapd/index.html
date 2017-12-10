@@ -86,6 +86,7 @@ _DOMAIN=example.com
 _SUFFIX="dc=example,dc=com"
 _ROOTCN="root"
 _ROOTDN="cn=${_ROOTCN},${_SUFFIX}"
+_PROXY_BINDDN="cn=read,ou=proxy,${_SUFFIX}"
 
 
 
@@ -137,9 +138,9 @@ dn: ou=groups,${_SUFFIX}
 objectClass: organizationalUnit
 ou: groups
 
-dn: ou=managers,${_SUFFIX}
+dn: ou=proxy,${_SUFFIX}
 objectClass: organizationalUnit
-ou: managers
+ou: proxy
 __EOF__
 
 # Confirm Entries.
@@ -147,19 +148,17 @@ ldapsearch -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN
 
 
 
-# Add managers
+# Generate proxy user password
+test -f ~/.slapd.${_PROXY_BINDDN}.secret || printf $(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16) > $_
+ls -l   ~/.slapd.${_PROXY_BINDDN}.secret && chmod 600 $_ && chown ldap. $_ && ls -l $_
+
+# Add proxy user
 ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.secret) <<__EOF__
-dn: cn=read,ou=managers,${_SUFFIX}
+dn: cn=read,ou=proxy,${_SUFFIX}
 objectClass: inetOrgPerson
 mail: read@${_DOMAIN}
-userPassword: {CRYPT}\$5\$s305Qzc2\$ZXTeaxokuQRhB0jDIsnYHotrh0nVvbPewbucSPDmhm/
-sn: test
-
-dn: cn=write,ou=managers,${_SUFFIX}
-objectClass: inetOrgPerson
-mail: write@${_DOMAIN}
-userPassword: {CRYPT}\$5\$EhL/EygZ\$Zd6aB8R/ni8A/kA.vGlnaOq23SogmzwRfY/jYOIg2P0
-sn: test
+userPassword: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.${_ROOTDN}.secret)
+sn: read
 __EOF__
 
 # Confirm Entries.
@@ -178,8 +177,7 @@ olcAccess: to attrs=userPassword,shadowLastChange
   by self write
   by * none
 olcAccess: to dn.subtree="${_SUFFIX}"
-  by dn="cn=read,ou=managers,${_SUFFIX}" read
-  by dn="cn=write,ou=managers,${_SUFFIX}" write
+  by dn="cn=read,ou=proxy,${_SUFFIX}" read
 olcAccess: to *
   by dn="${_ROOTDN}" write
 __EOF__
@@ -190,6 +188,8 @@ __EOF__
 #changetype: modify
 #delete: olcAccess
 #olcAccess: {0}
+#olcAccess: {1}
+#olcAccess: {2}
 #__EOF__
 
 # Confirm ACL.
