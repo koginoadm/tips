@@ -198,7 +198,7 @@ ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "olcDatabase={2}hdb,cn=config"
 
 
 # Add test users & groups.
-ldapadd -v -H ldap://127.0.0.1 -x -D cn=write,ou=managers,${_SUFFIX} -W <<__EOF__
+ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.secret) <<__EOF__
 dn: uid=user01,ou=users,${_SUFFIX}
 objectClass: posixAccount
 cn: user01
