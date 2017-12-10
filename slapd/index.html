@@ -301,9 +301,9 @@ egrep "^tls_reqcert never"          /etc/nslcd.conf || sed "s@^#\(tls_reqcert ne
 authconfig --enablemkhomedir --update
 systemctl restart nslcd nscd
 
-#grep "^base ou=users,${_SUFFIX}" /etc/nslcd.conf || sed "s@^\(base dc=example,dc=com\)@#\1\nbase ou=users,${_SUFFIX}@g"  -i $_
-#grep "^binddn cn=read,ou=proxy,${_SUFFIX}" /etc/nslcd.conf || sed "s@^#\(binddn \)\(cn=proxyuser,dc=example,dc=com\)@#\1\2\n\1cn=read,ou=proxy,${_SUFFIX}@g" -i $_
-#grep "^bindpw " /etc/nslcd.conf || grep "^#bindpw secret" $_
+#egrep "^base ou=users,${_SUFFIX}" /etc/nslcd.conf || sed "s@^\(base dc=example,dc=com\)@#\1\nbase ou=users,${_SUFFIX}@g"  -i $_
+#egrep "^binddn cn=read,ou=proxy,${_SUFFIX}" /etc/nslcd.conf || sed "s@^#\(binddn \)\(cn=proxyuser,dc=example,dc=com\)@#\1\2\n\1cn=read,ou=proxy,${_SUFFIX}@g" -i $_
+#egrep "^bindpw .+" /etc/nslcd.conf || grep "^#bindpw secret" $_
 
 # written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
 __COMMENT__
