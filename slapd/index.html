@@ -202,6 +202,7 @@ ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.s
 dn: uid=user01,ou=users,${_SUFFIX}
 objectClass: inetOrgPerson
 objectClass: posixAccount
+sn: user01
 cn: user01
 uid: user01
 uidnumber: 38901
@@ -221,9 +222,9 @@ memberUid: user01
 dn: uid=user02,ou=users,${_SUFFIX}
 objectClass: inetOrgPerson
 mail: user02@${_DOMAIN}
-uid: user02
+sn: user02
 cn: user02
-sn: test
+uid: user02
 userPassword: {CRYPT}\$6\$b88shhJP\$R8ykn9EA7BwWvLtop8J7410ZCmgCYrNYozM8QdLqctSwMcFUV2URGQt6AwOJ1388h.TLjb7EMWOEQzCBjlvrR1
 
 dn: cn=group02,ou=groups,${_SUFFIX}
