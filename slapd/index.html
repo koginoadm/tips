@@ -157,7 +157,7 @@ ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.s
 dn: cn=read,ou=proxy,${_SUFFIX}
 objectClass: inetOrgPerson
 mail: read@${_DOMAIN}
-userPassword: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.${_ROOTDN}.secret)
+userPassword: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.${_PROXY_BINDDN}.secret)
 sn: read
 __EOF__
 
