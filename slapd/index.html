@@ -290,7 +290,8 @@ yum -y install nscd nss-pam-ldapd
 egrep '^[psg][adhoprsuw]+: +files sss ldap' /etc/nsswitch.conf || sed 's@^\(passwd: \+files sss\)@\1 ldap@g; s@^\(shadow: \+files sss\)@\1 ldap@g; s@^\(group: \+files sss\)@\1 ldap@g;' $_ -i_$(date +%Y%m%d_%H%M%S).backup
 cp -pi /etc/nslcd.conf{,_$(date +%Y%m%d_%H%M%S).backup}
 grep "^uri ldaps://${_LDAP_FQDN}/" /etc/nslcd.conf || sed "s@^\(uri ldap://127.0.0.1/\)@#\1\nuri ldaps://${_LDAP_FQDN}/@g" -i $_
-grep "^base ou=users,${_SUFFIX}"   /etc/nslcd.conf || sed "s@^\(base dc=example,dc=com\)@#\1\nbase ou=users,${_SUFFIX}@g"  -i $_
+#grep "^base ou=users,${_SUFFIX}"   /etc/nslcd.conf || sed "s@^\(base dc=example,dc=com\)@#\1\nbase ou=users,${_SUFFIX}@g"  -i $_
+grep "^base ${_SUFFIX}"            /etc/nslcd.conf || sed "s@^\(base dc=example,dc=com\)@#\1\nbase ${_SUFFIX}@g"           -i $_
 grep "^tls_reqcert never"          /etc/nslcd.conf || sed "s@^#\(tls_reqcert never\)@#\1\n\1@g"                            -i $_
 authconfig --enablemkhomedir --update
 systemctl restart nslcd nscd
