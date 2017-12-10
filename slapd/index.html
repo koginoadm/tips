@@ -25,10 +25,14 @@ cp -pi /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG && 
 
 # Set slapd.log
 echo "local4.* /var/log/slapd" > /etc/rsyslog.d/slapd.conf
+systemctl restart rsyslog
 
 # Start slapd.
 systemctl enable slapd
 systemctl start slapd
+
+# tail log
+tail -f /var/log/slapd
 
 
 
