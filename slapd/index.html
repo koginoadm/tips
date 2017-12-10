@@ -304,8 +304,7 @@ egrep "^base ${_SUFFIX}"                    /etc/nslcd.conf || sed "s@^\(base dc
 
 # Setup proxy
 egrep "^binddn cn=read,ou=proxy,${_SUFFIX}" /etc/nslcd.conf || sed "s@^#\(binddn \)\(cn=proxyuser,dc=example,dc=com\)@#\1\2\n\1cn=read,ou=proxy,${_SUFFIX}@g" -i $_
-# on ldapserver, [ # cat ~/.slapd.cn=read,ou=proxy,${_SUFFIX}.secret ]
-_SECRET=
+_SECRET=xxxxxxxxxxxxxxxx # cat ~/.slapd.cn=read,ou=proxy,${_SUFFIX}.secret
 egrep "^bindpw .+"                          /etc/nslcd.conf || sed "s@^#\(bindpw \)\(secret\)@#\1\2\n\1${_SECRET:?}@g" -i $_
 
 # Setup self-signed key
