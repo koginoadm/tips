@@ -21,7 +21,7 @@ then
 fi
 
 # Copy default DB_CONFIG.example.
-cp -pi /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG && chown ldap. $_ && ls -l $_
+test ! -f /var/lib/ldap/DB_CONFIG && cp -p /usr/share/openldap-servers/DB_CONFIG.example $_ && chown ldap. $_ && ls -l $_
 
 # Set slapd.log
 echo "local4.* /var/log/slapd" > /etc/rsyslog.d/slapd.conf
@@ -32,7 +32,7 @@ systemctl enable slapd
 systemctl start slapd
 
 # tail log
-tail -f /var/log/slapd
+#tail -f /var/log/slapd
 
 
 
