@@ -3,7 +3,7 @@ cat <<'__COMMENT__'
 <link rel="stylesheet" href="/css/vs2015.css"><script src="/js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0;margin:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/slapd/
 
 # Disable SELinux.
-grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup && setenforce 0
+grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +\%Y\%m\%d_\%H\%M\%S).backup && setenforce 0
 
 # Update packages.
 yum makecache fast
@@ -275,7 +275,7 @@ __EOF__
 ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "cn=config" "(cn=config)" olcTLSCertificateFile olcTLSCertificateKeyFile
 
 # Set LDAPS Uri
-sed 's@^\(SLAPD_URLS=\)\("ldapi:/// \)\(ldap:///"\)@#\1\2\3\n'"$(date +'# %Y%m%d #')"'\n\1\2ldaps:/// \3"@g' -i /etc/sysconfig/slapd && cat $_
+sed 's@^\(SLAPD_URLS=\)\("ldapi:/// \)\(ldap:///"\)@#\1\2\3\n# '"$(date +\%Y\%m\%d)"' #\n\1\2ldaps:/// \3"@g' -i /etc/sysconfig/slapd && cat $_
 
 # Restart
 systemctl restart slapd
@@ -295,10 +295,10 @@ _SUFFIX="dc=example,dc=com"
 yum -y install nscd nss-pam-ldapd
 
 # Setup nss
-egrep '^[psg][adhoprsuw]+: +files sss ldap' /etc/nsswitch.conf || sed 's@^\(passwd: \+files sss\)@\1 ldap@g; s@^\(shadow: \+files sss\)@\1 ldap@g; s@^\(group: \+files sss\)@\1 ldap@g;' $_ -i_$(date +%Y%m%d_%H%M%S).backup
+egrep '^[psg][adhoprsuw]+: +files sss ldap' /etc/nsswitch.conf || sed 's@^\(passwd: \+files sss\)@\1 ldap@g; s@^\(shadow: \+files sss\)@\1 ldap@g; s@^\(group: \+files sss\)@\1 ldap@g;' $_ -i_$(date +\%Y\%m\%d_\%H\%M\%S).backup
 
 # Setup nslcd
-cp -pi /etc/nslcd.conf{,_$(date +%Y%m%d_%H%M%S).backup}
+cp -pi /etc/nslcd.conf{,_$(date +\%Y\%m\%d_\%H\%M\%S).backup}
 egrep "^uri ldaps://${_LDAP_FQDN}/"         /etc/nslcd.conf || sed "s@^\(uri ldap://127.0.0.1/\)@#\1\nuri ldaps://${_LDAP_FQDN}/@g" -i $_
 egrep "^base ${_SUFFIX}"                    /etc/nslcd.conf || sed "s@^\(base dc=example,dc=com\)@#\1\nbase ${_SUFFIX}@g"           -i $_
 
