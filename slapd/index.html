@@ -45,7 +45,7 @@ ldapmodify -v -Y EXTERNAL -H ldapi:/// <<__EOF__
 dn: olcDatabase={0}config,cn=config
 changetype: modify
 add: olcRootPW
-olcRootPW: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.secret)
+olcRootPW: $(slappasswd -h {CRYPT} -c '$5$%.8s' -T ~/.slapd.secret)
 __EOF__
 
 # Confirm RootPW for cn=config.
@@ -77,7 +77,7 @@ olcPasswordHash: {CRYPT}
 dn: cn=config
 changetype: modify
 replace: olcPasswordCryptSaltFormat
-olcPasswordCryptSaltFormat: $6$%.8s
+olcPasswordCryptSaltFormat: $5$%.8s
 __EOF__
 
 # Confirm PasswordHash & PasswordCryptSaltFormat
@@ -113,7 +113,7 @@ olcRootDN: ${_ROOTDN}
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 replace: olcRootPW
-olcRootPW: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.${_ROOTDN}.secret)
+olcRootPW: $(slappasswd -h {CRYPT} -c '$5$%.8s' -T ~/.slapd.${_ROOTDN}.secret)
 __EOF__
 
 # Confirm RootDN & RootPW for Suffix.
@@ -161,7 +161,7 @@ ldapadd -v -H ldap://127.0.0.1 -x -D "${_ROOTDN}" -w $(cat ~/.slapd.${_ROOTDN}.s
 dn: cn=read,ou=proxy,${_SUFFIX}
 objectClass: inetOrgPerson
 mail: read@${_DOMAIN}
-userPassword: $(slappasswd -h {CRYPT} -c '$6$%.8s' -T ~/.slapd.${_PROXY_BINDDN}.secret)
+userPassword: $(slappasswd -h {CRYPT} -c '$5$%.8s' -T ~/.slapd.${_PROXY_BINDDN}.secret)
 sn: read
 __EOF__
 
@@ -212,7 +212,7 @@ uid: user01
 uidnumber: 38901
 gidNumber: 38901
 homeDirectory: /home/user01
-userPassword: {CRYPT}\$6\$b88shhJP\$R8ykn9EA7BwWvLtop8J7410ZCmgCYrNYozM8QdLqctSwMcFUV2URGQt6AwOJ1388h.TLjb7EMWOEQzCBjlvrR1
+userPassword: {CRYPT}\$5\$4QyEzI2E\$66C91BtUUdJiY6xpdBvYtKS8QhKebU761TIl4/SpEV.
 loginShell: /bin/bash
 gecos: LDAP test user
 description: LDAP test user
@@ -229,7 +229,7 @@ mail: user02@${_DOMAIN}
 cn: user02
 sn: user02
 uid: user02
-userPassword: {CRYPT}\$6\$b88shhJP\$R8ykn9EA7BwWvLtop8J7410ZCmgCYrNYozM8QdLqctSwMcFUV2URGQt6AwOJ1388h.TLjb7EMWOEQzCBjlvrR1
+userPassword: {CRYPT}\$5\$pXDOm51O\$JTTO5uySFUMmYyAnWnhJMlsSK8z99kk7ztFX1.xPmd6
 
 dn: cn=group02,ou=groups,${_SUFFIX}
 objectClass: groupOfNames
