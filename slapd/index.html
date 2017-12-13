@@ -202,7 +202,30 @@ ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "olcDatabase={2}hdb,cn=config"
 
 
 
-#
+# Confirm index.
+ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "olcDatabase={2}hdb,cn=config" "olcDbIndex"
+
+
+
+# Modify index.
+ldapmodify -v -Y EXTERNAL -Q -H ldapi:/// <<__EOF__
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcDbIndex
+olcDbIndex: objectClass eq,pres
+olcDbIndex: ou eq,pres,sub
+olcDbIndex: cn eq,pres,sub
+olcDbIndex: uidNumber eq,pres
+olcDbIndex: gidNumber eq,pres
+olcDbIndex: uid eq,pres,sub
+olcDbIndex: memberUid eq,pres,sub
+olcDbIndex: entryCSN eq
+olcDbIndex: entryUUID eq
+__EOF__
+
+
+
+# Confirm index.
 ldapsearch -v -LLL -Y EXTERNAL -Q -H ldapi:/// -b "olcDatabase={2}hdb,cn=config" "olcDbIndex"
 
 
