@@ -183,6 +183,7 @@ olcAccess: to attrs=userPassword,shadowLastChange
 olcAccess: to dn.subtree="${_SUFFIX}"
   by dn="cn=read,ou=proxy,${_SUFFIX}" read
 olcAccess: to *
+  by self read
   by dn="${_ROOTDN}" write
 __EOF__
 
