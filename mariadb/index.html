@@ -7,10 +7,10 @@ cat <<'__COMMENT__'
 #### mariadb-server on CentOS7 ####
 rpm -q mariadb-server || (
 yum -y install mariadb-server
-test -f /etc/my.cnf.d/server.cnf && mv $_ ${_}_$(date +%Y%m%d_%H%M%S).backup
+test -f /etc/my.cnf.d/server.cnf && mv $_ ${_}_$(date +\%Y\%m\%d_\%H\%M\%S).backup
 cp -p /usr/share/mysql/my-small.cnf /etc/my.cnf.d/server.cnf
-grep 'default-character-set = utf8' /etc/my.cnf.d/server.cnf || sed 's@\(\[client\]\)@\1\ndefault-character-set = utf8'"$(date +'# %Y%m%d #')"'@g;' -i /etc/my.cnf.d/server.cnf
-grep 'character-set-server = utf8'  /etc/my.cnf.d/server.cnf || sed 's@\(\[mysqld\]\)@\1\ncharacter-set-server = utf8'"$(date +'# %Y%m%d #')"'@g;'  -i /etc/my.cnf.d/server.cnf
+grep 'default-character-set = utf8' /etc/my.cnf.d/server.cnf || sed 's@\(\[client\]\)@\1\ndefault-character-set = utf8'"$(date +\#\ \%Y\%m\%d\ \#)"'@g;' -i $_
+grep 'character-set-server = utf8'  /etc/my.cnf.d/server.cnf || sed 's@\(\[mysqld\]\)@\1\ncharacter-set-server = utf8'"$(date +\#\ \%Y\%m\%d\ \#)"'@g;'  -i $_
 systemctl enable mariadb
 systemctl start mariadb
 [[ -r ~/.my.cnf ]] || echo -e '[client]\nuser = root\npassword = "'$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)'"' >> ~/.my.cnf
