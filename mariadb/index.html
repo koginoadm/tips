@@ -1,0 +1,30 @@
+# START ########################################################
+cat <<'__COMMENT__'
+<link rel="stylesheet" href="/css/vs2015.css"><script src="/js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0;margin:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/mariadb/
+
+
+
+#### mariadb-server on CentOS7 ####
+rpm -q mariadb-server || (
+yum -y install mariadb-server
+test -f /etc/my.cnf.d/server.cnf && mv $_ ${_}_$(date +%Y%m%d_%H%M%S).backup
+cp -p /usr/share/mysql/my-small.cnf /etc/my.cnf.d/server.cnf
+grep 'default-character-set = utf8' /etc/my.cnf.d/server.cnf || sed 's@\(\[client\]\)@\1\ndefault-character-set = utf8'"$(date +'# %Y%m%d #')"'@g;' -i /etc/my.cnf.d/server.cnf
+grep 'character-set-server = utf8'  /etc/my.cnf.d/server.cnf || sed 's@\(\[mysqld\]\)@\1\ncharacter-set-server = utf8'"$(date +'# %Y%m%d #')"'@g;'  -i /etc/my.cnf.d/server.cnf
+systemctl enable mariadb
+systemctl start mariadb
+[[ -r ~/.my.cnf ]] || echo -e '[client]\nuser = root\npassword = "'$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)'"' >> ~/.my.cnf
+mysql -u root --password= -e "
+    UPDATE mysql.user SET Password=PASSWORD('$(grep ^password ~/.my.cnf | sed 's/^password = .\([a-zA-Z0-9]\+\)./\1/g')') WHERE User='root';
+    DELETE FROM mysql.user WHERE User='';
+    DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+    DROP DATABASE test;
+    DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+    FLUSH PRIVILEGES;"
+)
+
+
+
+# written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
+__COMMENT__
+# END ##########################################################
