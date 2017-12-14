@@ -251,16 +251,56 @@ memberUid: user01
 
 dn: uid=user02,ou=users,${_SUFFIX}
 objectClass: inetOrgPerson
-mail: user02@${_DOMAIN}
+objectClass: posixAccount
 cn: user02
 sn: user02
 uid: user02
-userPassword: {CRYPT}\$5\$pXDOm51O\$JTTO5uySFUMmYyAnWnhJMlsSK8z99kk7ztFX1.xPmd6
+uidnumber: 38902
+gidNumber: 38902
+homeDirectory: /home/user02
+userPassword: {CRYPT}\$5\$EONHfA9m\$kYphm4GdC1qOGRd4vfvlxyo/xb1gREnkRDwzBdqJJQC
+loginShell: /bin/bash
+gecos: LDAP test user
+description: LDAP test user
 
 dn: cn=group02,ou=groups,${_SUFFIX}
-objectClass: groupOfNames
+objectClass: posixGroup
 cn: group02
-member: uid=user02,ou=users,${_SUFFIX}
+gidNumber: 38902
+memberUid: user02
+
+dn: uid=user03,ou=users,${_SUFFIX}
+objectClass: inetOrgPerson
+objectClass: posixAccount
+cn: user03
+sn: user03
+uid: user03
+uidnumber: 38903
+gidNumber: 38903
+homeDirectory: /home/user03
+userPassword: {CRYPT}\$5\$m6YnHnBC\$l8d3Ci4QL6TtGUo7OwMyzZ6w3GZ7.VTIGIT.CHeEwe5
+loginShell: /bin/bash
+gecos: LDAP test user
+description: LDAP test user
+
+dn: cn=group03,ou=groups,${_SUFFIX}
+objectClass: posixGroup
+cn: group02
+gidNumber: 38903
+memberUid: user03
+
+dn: uid=user99,ou=users,${_SUFFIX}
+objectClass: inetOrgPerson
+mail: user99@${_DOMAIN}
+cn: user99
+sn: user99
+uid: user99
+userPassword: {CRYPT}\$5\$pXDOm51O\$JTTO5uySFUMmYyAnWnhJMlsSK8z99kk7ztFX1.xPmd6
+
+dn: cn=group99,ou=groups,${_SUFFIX}
+objectClass: groupOfNames
+cn: group99
+member: uid=user99,ou=users,${_SUFFIX}
 __EOF__
 
 
