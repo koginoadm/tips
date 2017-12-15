@@ -58,9 +58,12 @@ systemctl list-unit-files
 #### SELinux ####
 grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup && setenforce 0
 
-#### Update Package Repository Database ####
+#### apt ####
 apt update
+
+#### yum ####
 yum makecache fast
+yum repolist all
 
 #### install utils ####
 apt -y install dnsutils nmap perl telnet unzip vim whois zip
