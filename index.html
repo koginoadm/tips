@@ -13,7 +13,6 @@ find ./ -type f -exec chmod 644 {} \;
 find ./ -type d -exec chmod 755 {} \;
 echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"
 function confsh-get-used-ip-class-c() { [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && \echo $1.{1..254} | \xargs -P254 -n1 \ping -s1 -c1 -W1 | \grep ttl | \sort -V || return 1; }
-echo 172.16.1.{0..255} | xargs -P256 -n1 ping -s1 -c1 -W1 | \grep ttl | sort -V
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
 #### *nix ####
@@ -68,7 +67,7 @@ alias grep='grep --color=auto'
 systemctl list-unit-files
 
 #### SELinux ####
-grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/#\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup && setenforce 0
+grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/'"$(date +\#\ \%Y\%m\%d\ \#)"'\n#\1\2\n\1permissive/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup && setenforce 0
 
 #### apt ####
 apt update
