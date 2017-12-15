@@ -16,7 +16,7 @@ function confsh-get-used-ip-class-c() { [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && 
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
 #### cron ####
-echo '* * * * * PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:$PATH" env > /tmp/cron_env_5'
+# * * * * * PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:$PATH" env > /tmp/cron_env_$(date +\%Y\%m\%d).log
 
 #### *nix ####
 vipw
