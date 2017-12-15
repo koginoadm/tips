@@ -100,9 +100,6 @@ httpd -v #Print the version of httpd.
 httpd -V #Print the version and build parameters of httpd.
 curl http://djeeno.info/apache/ssl_rewrite.conf
 
-#### OpenLDAP Server ####
-yum -y install openldap-servers
-
 #### ssh ####
 echo | ssh-keygen -N ""
 [ -d ~/.ssh ] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
