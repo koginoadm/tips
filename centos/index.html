@@ -1,0 +1,33 @@
+# START ########################################################
+cat <<'__COMMENT__'
+<link rel="stylesheet" href="/css/vs2015.css"><script src="/js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0;margin:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/
+
+
+test -f /etc/yum.repos.d/CentOS-Media.repo || cat <<'__EOF__' > $_
+# CentOS-Media.repo
+#
+#  This repo can be used with mounted DVD media, verify the mount point for
+#  CentOS-6.  You can use this repo and yum to install items directly off the
+#  DVD ISO that we release.
+#
+# To use this repo, put in your DVD and use it with the other repos too:
+#  yum --enablerepo=c6-media [command]
+#
+# or for ONLY the media repo, do this:
+#
+#  yum --disablerepo=\* --enablerepo=c6-media [command]
+
+[c6-media]
+name=CentOS-$releasever - Media
+baseurl=file:///media/CentOS/
+        file:///media/cdrom/
+        file:///media/cdrecorder/
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+__EOF__
+
+
+# written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
+__COMMENT__
+# END ##########################################################
