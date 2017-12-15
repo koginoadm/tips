@@ -15,6 +15,9 @@ echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"
 function confsh-get-used-ip-class-c() { [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && \echo $1.{1..254} | \xargs -P254 -n1 \ping -s1 -c1 -W1 | \grep ttl | \sort -V || return 1; }
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
 
+#### cron ####
+echo '* * * * * PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:$PATH" env > /tmp/cron_env_5'
+
 #### *nix ####
 vipw
 vigr
