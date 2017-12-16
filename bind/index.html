@@ -1,0 +1,155 @@
+# START ########################################################
+cat <<'__COMMENT__'
+<link rel="stylesheet" href="/css/vs2015.css"><script src="/js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0;margin:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/bind/
+
+### install ###
+yum install bind bind-libs bind-chroot bind-utils
+
+### backup ###
+cp -p /etc/named.conf{,_$(date +%Y%m%d_%H%M%S).backup} && ls -l /etc/named.conf_*.backup
+
+### vars ###
+_lan=10.0.0.0/16
+_domain=example.com
+_arpa=0.10
+
+### conf ###
+cat <<__EOF__ > /etc/named.conf && ls -l /etc/named.conf
+/* Define lan segment */
+acl "lan" { ${_lan}; };
+
+options {
+        //listen-on port 53 { 127.0.0.1; };
+        listen-on port 53 { 0.0.0.0; };
+        listen-on-v6 port 53 { ::1; };
+        version         "unknown";
+        directory       "/var/named";
+        dump-file       "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+        allow-query     { localhost; lan; }; /* Allow only "lan" */
+
+        /*
+         - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
+         - If you are building a RECURSIVE (caching) DNS server, you need to enable
+           recursion.
+         - If your recursive DNS server has a public IP address, you MUST enable access
+           control to limit queries to your legitimate users. Failing to do so will
+           cause your server to become part of large scale DNS amplification
+           attacks. Implementing BCP38 within your network would greatly
+           reduce such attack surface
+        */
+        recursion yes; /* building a RECURSIVE (caching) DNS server (full-service resolver) */
+
+        dnssec-enable yes;
+        dnssec-validation yes;
+
+        /* Path to ISC DLV key */
+        bindkeys-file "/etc/named.iscdlv.key";
+
+        managed-keys-directory "/var/named/dynamic";
+
+        pid-file "/run/named/named.pid";
+        session-keyfile "/run/named/session.key";
+
+        forwarders { 8.8.8.8; 8.8.4.4; };
+        forward only;
+};
+
+logging {
+        channel default_debug {
+                file "data/named.run";
+                severity dynamic;
+        };
+        category lame-servers { null; }; /* avoid "error (connection refused) resolving" */
+};
+
+view "internal" {
+        /* Define internal query */
+        match-clients { localhost; lan; };
+        match-destinations { localhost; 0.0.0.0; };
+
+        zone "." IN {
+                type hint;
+                file "named.ca";
+        };
+
+        /* forward zone ${_domain} */
+        zone "${_domain}" IN {
+                type master;
+                file "${_domain}.zone";
+        };
+
+        /* reverse zone ${_lan} */
+        zone "${_arpa}.in-addr.arpa" {
+                type master;
+                file "${_arpa}.in-addr.arpa.rev";
+        };
+
+        include "/etc/named.rfc1912.zones";
+        include "/etc/named.root.key";
+};
+
+/* Because it is internal for DNS, external view is commented out　*/
+/*
+view "external" {
+        match-clients { any; };
+        match-destinations { any; };
+        recursion no;
+};
+ */
+__EOF__
+
+### zone ###
+cat <<__EOF__ > /var/named/${_domain}.zone && ls -l /var/named/${_domain}.zone
+$TTL 60
+@                IN      SOA ns-01.${_domain}. root.${_domain}. (
+                         2017121701 ; serial
+                         60         ; refresh 1min
+                         60         ; retry 1min
+                         60         ; expire 1min
+                         60         ; min 1min
+)
+
+                 IN      NS     ns-01.${_domain}.
+www-01           IN      A      10.0.0.11
+www              IN      CNAME  www-01.${_domain}.
+ovirt-01         IN      A      10.0.255.240
+kvm-01           IN      A      10.0.255.241
+kvm-02           IN      A      10.0.255.242
+kvm-03           IN      A      10.0.255.243
+__EOF__
+
+### rev ###
+cat <<__EOF__ > /var/named/${_arpa}.in-addr.arpa.rev && ls -l /var/named/${_arpa}.in-addr.arpa.rev
+$TTL 60
+@                IN      SOA ns-01.${_domain}. root.${_domain}. (
+                         2017121701 ; serial
+                         60         ; refresh 1min
+                         60         ; retry 1min
+                         60         ; expire 1min
+                         60         ; min 1min
+)
+
+                 IN      NS     ns-01.${_domain}.
+11.0             IN      PTR    www-01.${_domain}.
+240.255          IN      PTR    ovirt-01.${_domain}.
+241.255          IN      PTR    kvm-01.${_domain}.
+242.255          IN      PTR    kvm-02.${_domain}.
+243.255          IN      PTR    kvm-03.${_domain}.
+__EOF__
+
+### startup ###
+systemctl enable named-chroot
+
+### start ###
+systemctl start named-chroot
+
+### check ###
+dig www-01.${_domain}.
+
+
+
+# written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
+__COMMENT__
+# END ##########################################################
