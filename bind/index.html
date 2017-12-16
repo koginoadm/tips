@@ -6,7 +6,7 @@ cat <<'__COMMENT__'
 yum -y install bind bind-libs bind-chroot bind-utils
 
 ### backup ###
-cp -p /etc/named.conf{,_$(date +%Y%m%d_%H%M%S).backup} && ls -l /etc/named.conf_*.backup
+cp -p /etc/named.conf{,_$(date +%Y%m%d_%H%M%S).backup} && ls -l /etc/named.conf*
 
 ### vars ###
 _lan=10.0.0.0/16
