@@ -172,7 +172,8 @@ __EOF__
 
 
 ### zone & rev ###
-ls -l /var/named/*.zone /var/named/*.rev
+ls -l /var/named/{*.zone,*.rev}
+ls /var/named/{*.zone,*.rev} | while read LINE; do ln -sf ${LINE} ~/$(basename -- ${LINE}); ls -l ~/$(basename -- ${LINE}); done
 
 
 
