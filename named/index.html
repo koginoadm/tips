@@ -2,6 +2,30 @@
 cat <<'__COMMENT__'
 <link rel="stylesheet" href="/css/vs2015.css"><script src="/js/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><style>body{font-size:0;margin:0}.monospaced{font-size:1rem;font-family:"Osaka－等幅",Consolas,"Courier New",Courier,monospace}</style><div><pre><code class="monospaced"># curl http://djeeno.info/bind/
 
+### vars ###
+{
+_host=ns-01
+_domain=djeeno.net
+_ipaddr=10.252.255.53
+_lan=10.252.0.0/16
+_arpa=252.10
+}
+
+
+
+### prepare ###
+hostnamectl set-hostname 
+timedatectl set-timezone Asia/Tokyo
+yum -y install chrony
+systemctl enable chronyd
+chronyc makestep
+chronyc sources
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp -m tcp --dport 53 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p udp -m udp --dport 53 -j ACCEPT
+systemctl restart firewalld
+
+
+
 ### install ###
 yum -y install bind bind-libs bind-chroot bind-utils
 
@@ -9,16 +33,6 @@ yum -y install bind bind-libs bind-chroot bind-utils
 
 ### backup ###
 cp -p /etc/named.conf{,_$(date +%Y%m%d_%H%M%S).backup} && ls -l /etc/named.conf*
-
-
-
-### vars ###
-{
-_bindip=10.252.255.53
-_lan=10.252.0.0/16
-_domain=djeeno.net
-_arpa=252.10
-}
 
 
 
@@ -113,7 +127,7 @@ __EOF__
 ### zone ###
 cat <<__EOF__ > /var/named/${_domain}.zone && ls -l /var/named/${_domain}.zone
 \$TTL 60
-@                IN      SOA ns-01.${_domain}. root.${_domain}. (
+@                IN      SOA ${_host}.${_domain}. root.${_domain}. (
                          2017121701 ; serial
                          60         ; refresh 1min
                          60         ; retry 1min
@@ -121,8 +135,8 @@ cat <<__EOF__ > /var/named/${_domain}.zone && ls -l /var/named/${_domain}.zone
                          60         ; min 1min
 )
 ;
-                 IN      NS     ns-01.${_domain}.
-ns-01            IN      A      ${_bindip}
+                 IN      NS     ${_host}.${_domain}.
+${_host}            IN      A      ${_ipaddr}
 ;
 www-01           IN      A      10.252.100.1
 www              IN      CNAME  www-01.${_domain}.
@@ -137,7 +151,7 @@ __EOF__
 ### rev ###
 cat <<__EOF__ > /var/named/${_arpa}.in-addr.arpa.rev && ls -l /var/named/${_arpa}.in-addr.arpa.rev
 \$TTL 60
-@                IN      SOA ns-01.${_domain}. root.${_domain}. (
+@                IN      SOA ${_host}.${_domain}. root.${_domain}. (
                          2017121701 ; serial
                          60         ; refresh 1min
                          60         ; retry 1min
@@ -145,7 +159,7 @@ cat <<__EOF__ > /var/named/${_arpa}.in-addr.arpa.rev && ls -l /var/named/${_arpa
                          60         ; min 1min
 )
 ;
-                 IN      NS     ns-01.${_domain}.
+                 IN      NS     ${_host}.${_domain}.
 ;
 1.100            IN      PTR    www-01.${_domain}.
 240.255          IN      PTR    ovirt-01.${_domain}.
