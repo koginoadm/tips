@@ -13,7 +13,8 @@ NAME=tmp
 DEVICE=tmp
 DEFROUTE=yes
 DNS1=8.8.8.8
-DNS2=8.8.4.4
+#DNS2=8.8.4.4
+DNS2=10.252.255.53
 
 # dhcp
 BOOTPROTO=dhcp
