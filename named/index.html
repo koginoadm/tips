@@ -14,7 +14,7 @@ _arpa=252.10
 
 
 ### prepare ###
-hostnamectl set-hostname 
+hostnamectl set-hostname ${_host}.${_domain}
 timedatectl set-timezone Asia/Tokyo
 yum -y install chrony
 systemctl enable chronyd
