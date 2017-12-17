@@ -176,13 +176,10 @@ ls -l /var/named/*.zone /var/named/*.rev
 
 
 
-### startup ###
-systemctl enable named-chroot
-
-
-
 ### start ###
+systemctl enable named-chroot
 systemctl start named-chroot
+systemctl status named-chroot
 
 
 
