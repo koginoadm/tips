@@ -10,10 +10,10 @@ cp -p /etc/named.conf{,_$(date +%Y%m%d_%H%M%S).backup} && ls -l /etc/named.conf*
 
 ### vars ###
 {
- _ipaddr=10.252.1.1
- _lan=10.0.0.0/16
- _domain=example.com
- _arpa=0.10
+ _bindip=10.252.255.53
+ _lan=10.252.0.0/16
+ _domain=djeeno.net
+ _arpa=252.10
 }
 
 ### conf ###
@@ -115,14 +115,14 @@ cat <<__EOF__ > /var/named/${_domain}.zone && ls -l /var/named/${_domain}.zone
 )
 ;
                  IN      NS     ns-01.${_domain}.
-ns-01            IN      A      ${_ipaddr}
+ns-01            IN      A      ${_bindip}
 ;
-www-01           IN      A      10.0.0.11
+www-01           IN      A      10.252.100.1
 www              IN      CNAME  www-01.${_domain}.
-ovirt-01         IN      A      10.0.255.240
-kvm-01           IN      A      10.0.255.241
-kvm-02           IN      A      10.0.255.242
-kvm-03           IN      A      10.0.255.243
+ovirt-01         IN      A      10.252.255.240
+kvm-01           IN      A      10.252.255.241
+kvm-02           IN      A      10.252.255.242
+kvm-03           IN      A      10.252.255.243
 __EOF__
 
 ### rev ###
@@ -137,9 +137,9 @@ cat <<__EOF__ > /var/named/${_arpa}.in-addr.arpa.rev && ls -l /var/named/${_arpa
 )
 ;
                  IN      NS     ns-01.${_domain}.
-53.255           IN      A      ${_ipaddr}
+53.255           IN      A      ns-01.${_domain}.
 ;
-11.0             IN      PTR    www-01.${_domain}.
+1.100             IN      PTR    www-01.${_domain}.
 240.255          IN      PTR    ovirt-01.${_domain}.
 241.255          IN      PTR    kvm-01.${_domain}.
 242.255          IN      PTR    kvm-02.${_domain}.
