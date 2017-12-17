@@ -104,7 +104,7 @@ __EOF__
 
 ### zone ###
 cat <<__EOF__ > /var/named/${_domain}.zone && ls -l /var/named/${_domain}.zone
-$TTL 60
+\$TTL 60
 @                IN      SOA ns-01.${_domain}. root.${_domain}. (
                          2017121701 ; serial
                          60         ; refresh 1min
@@ -124,7 +124,7 @@ __EOF__
 
 ### rev ###
 cat <<__EOF__ > /var/named/${_arpa}.in-addr.arpa.rev && ls -l /var/named/${_arpa}.in-addr.arpa.rev
-$TTL 60
+\$TTL 60
 @                IN      SOA ns-01.${_domain}. root.${_domain}. (
                          2017121701 ; serial
                          60         ; refresh 1min
