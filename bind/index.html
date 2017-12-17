@@ -10,6 +10,7 @@ cp -p /etc/named.conf{,_$(date +%Y%m%d_%H%M%S).backup} && ls -l /etc/named.conf*
 
 ### vars ###
 {
+ _ipaddr=10.252.1.1
  _lan=10.0.0.0/16
  _domain=example.com
  _arpa=0.10
@@ -112,8 +113,10 @@ cat <<__EOF__ > /var/named/${_domain}.zone && ls -l /var/named/${_domain}.zone
                          60         ; expire 1min
                          60         ; min 1min
 )
-
+;
                  IN      NS     ns-01.${_domain}.
+ns-01            IN      A      ${_ipaddr}
+;
 www-01           IN      A      10.0.0.11
 www              IN      CNAME  www-01.${_domain}.
 ovirt-01         IN      A      10.0.255.240
@@ -132,8 +135,10 @@ cat <<__EOF__ > /var/named/${_arpa}.in-addr.arpa.rev && ls -l /var/named/${_arpa
                          60         ; expire 1min
                          60         ; min 1min
 )
-
+;
                  IN      NS     ns-01.${_domain}.
+53.255           IN      A      ${_ipaddr}
+;
 11.0             IN      PTR    www-01.${_domain}.
 240.255          IN      PTR    ovirt-01.${_domain}.
 241.255          IN      PTR    kvm-01.${_domain}.
