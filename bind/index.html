@@ -5,8 +5,12 @@ cat <<'__COMMENT__'
 ### install ###
 yum -y install bind bind-libs bind-chroot bind-utils
 
+
+
 ### backup ###
 cp -p /etc/named.conf{,_$(date +%Y%m%d_%H%M%S).backup} && ls -l /etc/named.conf*
+
+
 
 ### vars ###
 {
@@ -15,6 +19,8 @@ _lan=10.252.0.0/16
 _domain=djeeno.net
 _arpa=252.10
 }
+
+
 
 ### conf ###
 {
@@ -104,6 +110,8 @@ view "external" {
 __EOF__
 }
 
+
+
 ### zone ###
 {
 cat <<__EOF__ > /var/named/${_domain}.zone && ls -l /var/named/${_domain}.zone
@@ -128,6 +136,8 @@ kvm-03           IN      A      10.252.255.243
 __EOF__
 }
 
+
+
 ### rev ###
 {
 cat <<__EOF__ > /var/named/${_arpa}.in-addr.arpa.rev && ls -l /var/named/${_arpa}.in-addr.arpa.rev
@@ -150,17 +160,25 @@ cat <<__EOF__ > /var/named/${_arpa}.in-addr.arpa.rev && ls -l /var/named/${_arpa
 __EOF__
 }
 
+
+
 ### zone & rev ###
 ls -l /var/named/*.zone /var/named/*.rev
+
+
 
 ### startup ###
 systemctl enable named-chroot
 
+
+
 ### start ###
 systemctl start named-chroot
 
+
+
 ### check ###
-dig www-01.${_domain}.
+dig www.${_domain}.
 
 
 
