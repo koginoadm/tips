@@ -12,9 +12,10 @@ curl djeeno.info/old/
 #### bash ####
 [ "$(id -u)" = 0 ] && PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ ' || PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 find ./ -type d -exec chmod 755 {} \; && find ./ -type f -exec chmod 644 {} \;
-echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"
-function confsh-get-used-ip-class-c() { [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && \echo $1.{1..254} | \xargs -P254 -n1 \ping -s1 -c1 -W1 | \grep ttl | \sort -V || return 1; }
 for i in {0..255}; do printf "%3d: $(tput setaf $i)$(date -Is)$(tput sgr0)\n" $i; done
+function confsh-genpasswd() { echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"; }
+function confsh-get-usage-memory() { awk 'BEGIN{i=0;j=0;k=0;l=0}; /^MemTotal:/{i=$2}; /^MemFree:/{j=$2}; /^Active\(file\):/{k=$2}; /^Inactive\(file\):/{l=$2}; END{print (i-j-k-l)*100/i}' /proc/meminfo; }
+function confsh-get-used-ip() { [[ ${1} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo ${1}.{1..254} | xargs -P254 -n1 ping -s1 -c1 -W1 | grep ttl | sort -V | sed 's/[^ ]* byte[^ ]* from //g; s/: icmp_seq=[01]*//g; s/\(=6[34]\)/\1 (Linux)/g; s/\(=12[78]\)/\1 (Windows)/g; s/\(=25[45]\)/\1 (Unix)/g;' || { echo "Usage: ${FUNCNAME[0]} 192.168.100"; return 1; }; }
 
 #### cron ####
 # * * * * * PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:$PATH" env > /tmp/cron_env_$(date +\%Y\%m\%d).log
