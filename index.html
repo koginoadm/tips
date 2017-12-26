@@ -37,6 +37,7 @@ curl http://djeeno.info/ROOT/etc/sysconfig/network-scripts/ifcfg-tmp
 #### cifs ####
 apt -y install cifs-utils
 mount -t cifs //192.168.1.100/share /mnt/fs/share -o username=$USERNAME,password=$PASSWORD
+mkdir -p /mnt/fs/share && mount -t drvfs '\\10.11.3.3\share' /mnt/fs/share
 
 #### Firewalld ####
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -m state --state RELATED,ESTABLISHED -j ACCEPT
