@@ -34,6 +34,9 @@ ls -l /etc/ssh/keys-root/authorized_keys
 curl http://djeeno.info/ROOT/etc/sysconfig/network-scripts/ifcfg-tmp
 \ip a | \grep ^[0-9] | \sed 's/^[0-9]\+: //g; s/:.\+//g;' | \grep ^e
 
+#### Ubuntu ####
+apt -y install cifs-utils
+
 #### Firewalld ####
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -m state --state RELATED,ESTABLISHED -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -i lo -j ACCEPT
