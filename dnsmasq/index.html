@@ -16,6 +16,7 @@ hostnamectl set-hostname ${_host}.${_domain}
 timedatectl set-timezone Asia/Tokyo
 yum -y install chrony
 systemctl enable chronyd
+systemctl start chronyd
 chronyc makestep
 chronyc sources
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp --dport 22 -j ACCEPT
