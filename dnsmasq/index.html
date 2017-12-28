@@ -1,0 +1,194 @@
+cat <<'# curl http://djeeno.info/' > /dev/null
+<link rel="stylesheet" href="/main.css"><script src="/main.js"></script><div><pre><code class="monospaced">
+# curl http://djeeno.info/
+
+### vars ###
+{
+_host=ns-01
+_domain=djeeno.net
+_ipaddr=10.252.255.53
+_lan=10.252.0.0/16
+_arpa=252.10
+}
+
+
+
+### prepare ###
+grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^\(SELINUX=\)\(enforcing\)/'"$(date +\#\ \%Y\%m\%d\ \#)"'\1\2\n\1permissive/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup && setenforce 0
+hostnamectl set-hostname ${_host}.${_domain}
+timedatectl set-timezone Asia/Tokyo
+yum -y install chrony
+systemctl enable chronyd
+chronyc makestep
+chronyc sources
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp --dport 22 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp --dport 53 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p udp --dport 53 -j ACCEPT
+systemctl restart firewalld
+firewall-cmd --direct --get-all-rules
+
+
+
+### install ###
+yum -y install bind bind-libs bind-chroot bind-utils
+
+
+
+### backup ###
+cp -p /etc/named.conf{,_$(date +%Y%m%d_%H%M%S).backup} && ls -l /etc/named.conf*
+
+
+
+### conf ###
+cat <<__EOF__ > /etc/named.conf && ls -l /etc/named.conf
+/* Define lan segment */
+acl "lan" { ${_lan}; };
+
+options {
+        //listen-on port 53 { 127.0.0.1; };
+        listen-on-v6 port 53 { ::1; };
+        version         "unknown";
+        directory       "/var/named";
+        dump-file       "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+        allow-query     { localhost; lan; }; /* Allow only "lan" */
+
+        /*
+         - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
+         - If you are building a RECURSIVE (caching) DNS server, you need to enable
+           recursion.
+         - If your recursive DNS server has a public IP address, you MUST enable access
+           control to limit queries to your legitimate users. Failing to do so will
+           cause your server to become part of large scale DNS amplification
+           attacks. Implementing BCP38 within your network would greatly
+           reduce such attack surface
+        */
+        recursion yes; /* building a RECURSIVE (caching) DNS server (full-service resolver) */
+
+        dnssec-enable yes;
+        dnssec-validation yes;
+
+        /* Path to ISC DLV key */
+        bindkeys-file "/etc/named.iscdlv.key";
+
+        managed-keys-directory "/var/named/dynamic";
+
+        pid-file "/run/named/named.pid";
+        session-keyfile "/run/named/session.key";
+
+        forwarders { 8.8.8.8; 8.8.4.4; };
+        forward only;
+};
+
+logging {
+        channel default_debug {
+                file "data/named.run";
+                severity dynamic;
+        };
+        category lame-servers { null; }; /* avoid "error (connection refused) resolving" */
+};
+
+view "internal" {
+        /* Define internal query */
+        match-clients { localhost; lan; };
+        match-destinations { localhost; 0.0.0.0; };
+
+        zone "." IN {
+                type hint;
+                file "named.ca";
+        };
+
+        /* forward zone ${_domain} */
+        zone "${_domain}" IN {
+                type master;
+                file "${_domain}.zone";
+        };
+
+        /* reverse zone ${_lan} */
+        zone "${_arpa}.in-addr.arpa" {
+                type master;
+                file "${_arpa}.in-addr.arpa.rev";
+        };
+
+        include "/etc/named.rfc1912.zones";
+        include "/etc/named.root.key";
+};
+
+/* Because it is internal for DNS, external view is commented out　*/
+/*
+view "external" {
+        match-clients { any; };
+        match-destinations { any; };
+        recursion no;
+};
+ */
+__EOF__
+
+
+
+### zone ###
+cat <<__EOF__ > /var/named/${_domain}.zone && ls -l /var/named/${_domain}.zone
+\$TTL 60
+@                IN      SOA ${_host}.${_domain}. root.${_domain}. (
+                         2017121701 ; serial
+                         60         ; refresh 1min
+                         60         ; retry 1min
+                         60         ; expire 1min
+                         60         ; min 1min
+)
+;
+                 IN      NS     ${_host}.${_domain}.
+${_host}            IN      A      ${_ipaddr}
+;
+www-01           IN      A      10.252.100.1
+www              IN      CNAME  www-01.${_domain}.
+kimchi-01        IN      A      10.252.255.230
+kvm-01           IN      A      10.252.255.231
+kvm-02           IN      A      10.252.255.232
+esxi-01          IN      A      10.252.255.241
+__EOF__
+
+
+
+### rev ###
+cat <<__EOF__ > /var/named/${_arpa}.in-addr.arpa.rev && ls -l /var/named/${_arpa}.in-addr.arpa.rev
+\$TTL 60
+@                IN      SOA ${_host}.${_domain}. root.${_domain}. (
+                         2017121701 ; serial
+                         60         ; refresh 1min
+                         60         ; retry 1min
+                         60         ; expire 1min
+                         60         ; min 1min
+)
+;
+                 IN      NS     ${_host}.${_domain}.
+;
+1.100            IN      PTR    www-01.${_domain}.
+230.255          IN      PTR    kimchi-01.${_domain}.
+231.255          IN      PTR    kvm-01.${_domain}.
+232.255          IN      PTR    kvm-02.${_domain}.
+241.255          IN      PTR    esxi-01.${_domain}.
+__EOF__
+
+
+
+### zone & rev ###
+ls -l /var/named/{*.zone,*.rev}
+ls /var/named/{*.zone,*.rev} | while read LINE; do ln -sf ${LINE} ~/$(basename -- ${LINE}); ls -l ~/$(basename -- ${LINE}); done
+
+
+
+### start ###
+systemctl enable named-chroot
+systemctl start named-chroot
+systemctl status named-chroot
+
+
+
+### check ###
+dig www.${_domain}.
+
+
+
+# written by <a href="https://github.com/koginoadm">@koginoadm</a></code></pre></div>
