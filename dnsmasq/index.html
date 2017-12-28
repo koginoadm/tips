@@ -46,13 +46,11 @@ cat /etc/dnsmasq.conf
 ### hosts ###
 cat <<__EOD__
 $(cat /etc/hosts)
-#
 # dnsmasq
 10.252.255.53 ns-01.djeeno.net
 __EOD__
 
-cat >> /etc/hosts <<__EOD__
-#
+cat <<__EOD__ >> /etc/hosts
 # dnsmasq
 10.252.255.53 ns-01.djeeno.net
 __EOD__
