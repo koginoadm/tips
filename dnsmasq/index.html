@@ -15,6 +15,7 @@ grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^[[:space:]]*\(SELINU
 hostnamectl set-hostname ${_host}.${_domain}
 timedatectl set-timezone Asia/Tokyo
 yum -y install chrony
+sed 's/\(server \)0.[0-9a-zA-Z\.]\+\( iburst\)/\1ntp.nict.jp\2/g' /etc/chrony.conf
 systemctl enable chronyd
 systemctl start chronyd
 chronyc makestep
