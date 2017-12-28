@@ -44,7 +44,19 @@ cat /etc/dnsmasq.conf
 
 
 ### hosts ###
-cat /etc/hosts
+cat <<__EOD__
+$(cat /etc/hosts)
+#
+# dnsmasq
+10.252.255.53 ns-01.djeeno.net
+__EOD__
+
+cat >> /etc/hosts <<__EOD__
+#
+# dnsmasq
+10.252.255.53 ns-01.djeeno.net
+__EOD__
+
 
 
 
