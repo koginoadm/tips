@@ -39,6 +39,14 @@ sudo yum -y install postgresql postgresql-server postgresql-devel
 postgresql-setup initdb && ls -hl /var/lib/pgsql/data
 systemctl start postgresql
 systemctl status postgresql
+sudo -u postgres psql -d template1
+CREATE USER gogs CREATEDB;
+\password gogs
+CREATE DATABASE gogs OWNER gogs;
+\q
+
+
+
 
 
 
