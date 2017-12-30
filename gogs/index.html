@@ -7,6 +7,8 @@ declare vUri="https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz"
 
 ### firewall ###
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp --dport 3000 -j ACCEPT
+systemctl restart firewalld
+firewall-cmd --direct --get-all-rules
 
 ### git ###
 apt -y install git
