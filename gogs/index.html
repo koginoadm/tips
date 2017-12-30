@@ -57,7 +57,7 @@ certbot-auto certonly --standalone --register-unsafely-without-email --agree-tos
 ### nginx ###
 sudo apt -y install nginx
 sudo yum -y install nginx --enablerepo=epel
-cat > __EOF__
+cat > /etc/nginx/sites-available/gogs << __EOF__
 server {
     listen 80;
     server_name ${vServerName};
