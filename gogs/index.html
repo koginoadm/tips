@@ -3,7 +3,10 @@ cat <<'# curl http://djeeno.info/' > /dev/null
 # curl http://djeeno.info/
 
 ### vars ###
+{
 declare vUri="https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz"
+declare vServerName="git.djeeno.net"
+}
 
 ### firewall ###
 sudo firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp --dport 3000 -j ACCEPT
@@ -45,10 +48,32 @@ CREATE USER gogs CREATEDB;
 CREATE DATABASE gogs OWNER gogs;
 \q
 
+### certbot ###
+
+
 ### nginx ###
 sudo apt -y install nginx
 sudo yum -y install nginx
+cat > __EOF__
+server {
+    listen 80;
+    server_name ${vServerName};
+    return 302 https://\$server_name\$request_uri;
+}
 
+server {
+    listen 443 ssl;
+    server_name ${vServerName};
+
+    ssl_certificate /path/to/certificate.crt;
+    ssl_certificate_key /path/to/certificate_key.key;
+
+    location / {
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://127.0.0.1:3000;
+    }
+}
+__EOF__
 
 
 
