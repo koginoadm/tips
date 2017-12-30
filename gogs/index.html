@@ -50,8 +50,7 @@ CREATE DATABASE gogs OWNER gogs;
 
 ### certbot ###
 curl -LR https://dl.eff.org/certbot-auto -o /usr/local/bin/certbot-auto && chmod +x $_
-certbot-auto 
-
+certbot-auto certonly --standalone --register-unsafely-without-email --agree-tos --domains ${vServerName}
 
 ### nginx ###
 sudo apt -y install nginx
