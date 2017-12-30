@@ -35,7 +35,7 @@ source $HOME/.bash_profile
 ### install gogs ###
 go get -v -u github.com/gogits/gogs
 cd $GOPATH/src/github.com/gogits/gogs
-go build
+go build -v
 ./gogs web
 
 ### postgresql ###
