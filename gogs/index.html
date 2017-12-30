@@ -36,7 +36,7 @@ go build
 ### postgres ###
 sudo apt -y install postgresql postgresql-client libpq-dev
 sudo yum -y install postgresql postgresql-server postgresql-devel
-postgresql-setup initdb
+postgresql-setup initdb && ls -hl /var/lib/pgsql/data
 systemctl start postgres
 
 
