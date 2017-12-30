@@ -6,13 +6,13 @@ cat <<'# curl http://djeeno.info/' > /dev/null
 declare vUri="https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz"
 
 ### firewall ###
-firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp --dport 3000 -j ACCEPT
-systemctl restart firewalld
-firewall-cmd --direct --get-all-rules
+sudo firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp --dport 3000 -j ACCEPT
+sudo systemctl restart firewalld
+sudo firewall-cmd --direct --get-all-rules
 
 ### git ###
-apt -y install git
-yum -y install git
+sudo apt -y install git
+sudo yum -y install git
 
 ### install golang ###
 mkdir -p $HOME/local
@@ -36,17 +36,14 @@ go build
 ### postgresql ###
 sudo apt -y install postgresql postgresql-client libpq-dev
 sudo yum -y install postgresql postgresql-server postgresql-devel
-postgresql-setup initdb && ls -hl /var/lib/pgsql/data
-systemctl start postgresql
-systemctl status postgresql
+sudo postgresql-setup initdb && ls -hl /var/lib/pgsql/data
+sudo systemctl start postgresql
+sudo systemctl status postgresql
 sudo -u postgres psql -d template1
 CREATE USER gogs CREATEDB;
 \password gogs
 CREATE DATABASE gogs OWNER gogs;
 \q
-
-
-
 
 
 
