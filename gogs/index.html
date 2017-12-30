@@ -24,7 +24,9 @@ source $HOME/.bash_profile
 
 ### install gogs ###
 go get -uv github.com/gogits/gogs
-
+cd $GOPATH/src/github.com/gogits/gogs
+go build
+./gogs web
 
 
 
