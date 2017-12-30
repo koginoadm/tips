@@ -33,11 +33,12 @@ cd $GOPATH/src/github.com/gogits/gogs
 go build
 ./gogs web
 
-### postgres ###
+### postgresql ###
 sudo apt -y install postgresql postgresql-client libpq-dev
 sudo yum -y install postgresql postgresql-server postgresql-devel
 postgresql-setup initdb && ls -hl /var/lib/pgsql/data
-systemctl start postgres
+systemctl start postgresql
+systemctl status postgresql
 
 
 
