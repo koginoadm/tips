@@ -5,13 +5,13 @@ cat <<'# curl http://djeeno.info/' > /dev/null
 ### vars ###
 {
 _host=ns-01
-_domain=djeeno.net
+_domain=in.djeeno.net
 }
 
 
 
 ### prepare ###
-grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^[[:space:]]*\(SELINUX=\)\(enforcing\|permissive\|[:space:]¥+\)/'"$(date +\#\ \%Y\%m\%d\ \#)"'\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup && setenforce 0
+grep -q '^SELINUX=enforcing' /etc/selinux/config && sed 's/^[[:space:]]*\(SELINUX=\)\(enforcing\|permissive\|[:space:]\+\)/'"$(date +\#\ \%Y\%m\%d\ \#)"'\1\2\n\1disabled/g' $_ -i_$(date +%Y%m%d_%H%M%S).backup && setenforce 0
 hostnamectl set-hostname ${_host}.${_domain}
 timedatectl set-timezone Asia/Tokyo
 yum -y install chrony
