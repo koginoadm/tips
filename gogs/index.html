@@ -9,6 +9,8 @@ declare vServerName="git.djeeno.net"
 }
 
 ### firewall ###
+sudo firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp --dport 80 -j ACCEPT
+sudo firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp --dport 443 -j ACCEPT
 sudo firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1000 -p tcp --dport 3000 -j ACCEPT
 sudo systemctl restart firewalld
 sudo firewall-cmd --direct --get-all-rules
