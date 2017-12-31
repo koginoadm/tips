@@ -19,6 +19,10 @@ sudo firewall-cmd --direct --get-all-rules
 # sudo apt -y install git
 sudo yum -y install git
 
+### gogs ###
+sudo useradd -m -r gogs
+sudo su - gogs
+
 ### install golang ###
 mkdir -p $HOME/local
 curl -LR ${vUri} -o $HOME/local/$(basename ${vUri}) && tar -C $HOME/local -xvzf $_
@@ -37,6 +41,8 @@ go get -v -u github.com/gogits/gogs
 cd $GOPATH/src/github.com/gogits/gogs
 go build -v
 ./gogs web
+^C
+exit
 
 ### postgresql ###
 # sudo apt -y install postgresql postgresql-client libpq-dev
