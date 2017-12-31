@@ -57,14 +57,14 @@ CREATE DATABASE gogs OWNER gogs;
 \q
 
 ### certbot ###
-curl -LR https://dl.eff.org/certbot-auto -o /usr/local/bin/certbot-auto && chmod +x $_
-certbot-auto certonly --standalone --register-unsafely-without-email --agree-tos --domains ${vServerName}
+sudo curl -LR https://dl.eff.org/certbot-auto -o /usr/local/bin/certbot-auto && chmod +x $_
+sudo certbot-auto certonly --standalone --register-unsafely-without-email --agree-tos --domains ${vServerName}
 
 ### nginx ###
 sudo yum -y install nginx --enablerepo=epel
 # sudo apt -y install nginx
 # cat > /etc/nginx/sites-available/gogs << __EOF__
-cat > /etc/nginx/conf.d/gogs.conf << __EOF__
+sudo cat > /etc/nginx/conf.d/gogs.conf << __EOF__
 server {
     listen 80;
     server_name ${vServerName};
@@ -84,7 +84,8 @@ server {
     }
 }
 __EOF__
-systemctl start nginx
+sudo systemctl start nginx
+sudo systemctl status nginx
 
 
 
