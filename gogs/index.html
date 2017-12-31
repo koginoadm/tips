@@ -16,7 +16,7 @@ sudo systemctl restart firewalld
 sudo firewall-cmd --direct --get-all-rules
 
 ### git ###
-sudo apt -y install git
+# sudo apt -y install git
 sudo yum -y install git
 
 ### install golang ###
@@ -39,7 +39,7 @@ go build -v
 ./gogs web
 
 ### postgresql ###
-sudo apt -y install postgresql postgresql-client libpq-dev
+# sudo apt -y install postgresql postgresql-client libpq-dev
 sudo yum -y install postgresql postgresql-server postgresql-devel
 sudo postgresql-setup initdb && ls -dhl /var/lib/pgsql/data/*
 sudo systemctl start postgresql
@@ -55,9 +55,9 @@ curl -LR https://dl.eff.org/certbot-auto -o /usr/local/bin/certbot-auto && chmod
 certbot-auto certonly --standalone --register-unsafely-without-email --agree-tos --domains ${vServerName}
 
 ### nginx ###
-sudo apt -y install nginx
 sudo yum -y install nginx --enablerepo=epel
-cat > /etc/nginx/sites-available/gogs << __EOF__
+# sudo apt -y install nginx
+# cat > /etc/nginx/sites-available/gogs << __EOF__
 cat > /etc/nginx/conf.d/gogs.conf << __EOF__
 server {
     listen 80;
