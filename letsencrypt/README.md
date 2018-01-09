@@ -1,6 +1,8 @@
 ```
 mkdir -p /root/bin
 
+curl -L https://dl.eff.org/certbot-auto -o /root/bin/certbot-auto
+
 vim /root/bin/authenticator.sh
 
 vim /root/bin/cleanup.sh
