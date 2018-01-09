@@ -1,4 +1,5 @@
 #!/bin/bash
+# http://letsencrypt.readthedocs.io/en/latest/using.html
 
 # Get your API key from https://www.cloudflare.com/a/account/my-account
 API_KEY="your-api-key"
